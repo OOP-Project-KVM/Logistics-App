@@ -13,6 +13,8 @@ DISTANCE_TABLE = {
 def get_distance(start_location, end_location):
     return DISTANCE_TABLE[start_location.upper()][end_location.upper()]
 
+## TODO update status if package is delivered
+
 
 class Package:
     all_ids = set()
