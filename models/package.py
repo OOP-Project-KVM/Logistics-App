@@ -32,6 +32,7 @@ class Package:
         self._weight = weight
         self._customer_contact = customer_contact
         self.distance = get_distance(start_location, end_location)
+
         Package.all_ids.add(id_pack)
         Package.customer_info[id_pack] = customer_contact
 
@@ -73,13 +74,13 @@ class Package:
         self._customer_contact = value
 
     def validate_id(self, id_pack):
-        if not isinstance(id_pack, str):
-            raise ValueError("ID must be a non-empty string.")
+        if not id_pack:
+            raise ValueError("You must provide ID")
         if id_pack in Package.all_ids:
             raise ValueError(f"Shipment ID {id_pack} already exists.")
 
     def validate_location(self, location):
-        if location.upper() not in LOCATIONS:
+        if location[:3].upper() not in LOCATIONS:
             raise ValueError("We don't provide services at this location.")
 
     def validate_weight(self, weight):
