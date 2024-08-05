@@ -56,24 +56,7 @@ class Location:
                 f"Next departure : {departure_str}")
 
 
-try:
-    loc1 = Location(
-        name="Sydney",
-        arrival_time_str="05-08-2024 10:30:00",
-
-    )
-    loc2 = Location(
-        name="Melbourne",
-        arrival_time_str="06-08-2024 09:00:00"
-
-    )
-
-    print(loc1)
-    print()
-
-    print(loc2)
 
 
-except ValueError as e:
-    print(e)
+
 
