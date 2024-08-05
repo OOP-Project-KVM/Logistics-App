@@ -33,9 +33,10 @@ class Truck:
     
     @is_free.setter
     def is_free(self, status: Status):
-        if not isinstance(status, Status):
-            raise ValueError('Invalid status')
-        self._is_free = status
+        if status != Status.AVAILABLE or status != Status.BUSY:
+            raise ValueError("Invalid status. Please use Status.AVAILABLE or Status.UNAVAILABLE.")
+        else:
+            self._is_free = status
 
     @property
     def model(self) -> str:
