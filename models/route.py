@@ -2,6 +2,7 @@ from typing import List
 from location import Location
 from truck import Truck
 from package import Package
+from status import Status
 
 # Attributes:
 # id: unique identifier (int or string)
@@ -21,9 +22,9 @@ from package import Package
 class Route:
     def __init__(self, id: int, locations: List[Location]):
         self._id = id
-        self._locations = locations
-        self._truck = None
-        self._packages = []
+        self.locations = locations
+        self.truck = None
+        self.packages = []
 
     @property
     def id(self) -> int:
@@ -54,10 +55,13 @@ class Route:
         self._packages = packages
 
     def assign_truck(self, truck: Truck):
+        if truck.is_free == Status.BUSY:
+            raise ValueError("Truck is not available.")
         self._truck = truck
 
     def assign_package(self, package: Package):
+        if package.id_pack in [p.id_pack for p in self._packages]:
+            raise ValueError("Package is already assigned to this route.")
         self._packages.append(package)
 
-    def assign_package(self, package):
-        self.packages.append(package)
+    

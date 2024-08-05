@@ -32,7 +32,7 @@ class Truck:
         return self._is_free
     
     @is_free.setter
-    def is_free(self, status: Status):
+    def is_free(self, status):
         if status != Status.AVAILABLE or status != Status.BUSY:
             raise ValueError("Invalid status. Please use Status.AVAILABLE or Status.UNAVAILABLE.")
         else:
