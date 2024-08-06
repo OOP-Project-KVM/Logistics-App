@@ -40,27 +40,28 @@ class ApplicationData:
         return all_routes
 
     def update_route_assign_truck(self, route_id, truck_id):
-        truck = next((t for t in self._trucks if t.id == truck_id), False)
+        truck = next((t for t in self._trucks if t.id == truck_id), None)
         if not truck:
             raise ValueError(f'Truck with ID {truck_id} not found')
 
         if truck.is_free != Status.AVAILABLE:
             raise ValueError(f'Truck with ID {truck_id} is not available')
 
-        route = next((r for r in self._routes if r.id == route_id), False)
-        if not route:
+        route = next((r for r in self._routes if r.id == route_id), None)
+        if route is None:
             raise ValueError(f'Route with ID {route_id} not found')
+
 
         route.assign_truck(truck)
         truck.is_free = Status.BUSY
 
     def update_route_assign_package(self, route_id, package_id):
-        route = next((r for r in self._routes if r.id == route_id), False)
+        route = next((r for r in self._routes if r.id == route_id), None)
         if not route:
             raise ValueError(f'Route with ID {route_id} not found')
 
-        package = next((p for p in self._packages if p.id_pack == package_id), False)
-        if not package:
+        package = next((p for p in self._packages if p.id_pack == package_id), None)
+        if  package is None:
             raise ValueError(f'Package with ID {package_id} not found')
 
         route.assign_package(package)

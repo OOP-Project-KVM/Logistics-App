@@ -1,4 +1,4 @@
-from typing import List
+from typing import List,Optional
 from location import Location
 from truck import Truck
 from package import Package
@@ -23,7 +23,7 @@ class Route:
     def __init__(self, id: int, locations: List[Location]):
         self._id = id
         self.locations = locations
-        self.truck = None
+        self._truck: Optional[Truck] = None
         self.packages = []
 
     @property
@@ -39,7 +39,7 @@ class Route:
         self._locations = locations
 
     @property
-    def truck(self) -> Truck:
+    def truck(self) -> Optional[Truck]:
         return self._truck
     
     @truck.setter
