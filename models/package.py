@@ -34,6 +34,7 @@ class Package:
         self._weight = weight
         self._customer_contact = customer_contact
         self.distance = get_distance(start_location, end_location)
+        self.is_delivered = False
 
         Package.all_ids.add(id_pack)
         Package.customer_info[id_pack] = customer_contact

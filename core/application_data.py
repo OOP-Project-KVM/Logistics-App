@@ -20,6 +20,12 @@ class ApplicationData:
     @property
     def trucks(self):
         return tuple(self._packages)
+    
+    def initalize_trucks(self):
+        self._trucks.extend([Truck(id,'Scania',42000,8000) for id in range(1001,1011)])
+        self._trucks.extend([Truck(id,'MAN',37000,10000) for id in range(1011,1026)])
+        self._trucks.extend([Truck(id,'Actros',26000,13000) for id in range(1026,1041)])
+
 
     def create_package(self, id, start_location, end_location, weight, customer_contact):
         package = Package(id, start_location, end_location, weight, customer_contact)
@@ -53,7 +59,7 @@ class ApplicationData:
 
 
         route.assign_truck(truck)
-        truck.is_free = Status.BUSY
+        
 
     def update_route_assign_package(self, route_id, package_id):
         route = next((r for r in self._routes if r.id == route_id), None)
