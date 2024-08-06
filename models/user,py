@@ -1,0 +1,17 @@
+from os import name
+
+
+class User:
+    def __init__(self,username,password):
+        self.username = self.validate_username(username)
+        self.password = self.validate_password(password)
+
+    def validate_username(self,username):
+        if len(username) < 3 and len(username) > 15 :
+            return False
+        return name
+
+    def validate_password(self,password):
+        if len(password) < 8 and len(password) > 15:
+            return False
+        return password
