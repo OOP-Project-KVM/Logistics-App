@@ -1,4 +1,3 @@
-from models.delivery_system import DeliverySystem
 from models.route import Route
 from models.truck import Truck
 from models.package import Package
@@ -21,13 +20,13 @@ class CommandFactory:
             return (params, self._app_data)
         elif command == 'createroute':
             return (params, self._app_data)
-        elif command == "assigntruck":
+        elif command == "assigntrucktoroute":
             return (params, self._app_data)
         elif command == "assignpackage":
             return (params, self._app_data)
         elif command == "viewroutes":
             return (params, self._app_data)
-        elif command == "viewpackages":
+        elif command == "viewpackagedetails":
             return (params, self._app_data)
         elif command == "viewtrucks":
             return (params, self._app_data)
