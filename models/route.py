@@ -64,4 +64,3 @@ class Route:
             raise ValueError("Package is already assigned to this route.")
         self._packages.append(package)
 
-    

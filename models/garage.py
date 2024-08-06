@@ -32,8 +32,4 @@ class Garage:
     def get_free_trucks(self):
         return [truck for truck in self.trucks if truck.is_free == Status.AVAILABLE]
 
-    def get_truck_by_id(self, truck_id: int):
-        for truck in self.trucks:
-            if truck.id == truck_id:
-                return truck
-        return None
+    

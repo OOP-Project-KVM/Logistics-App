@@ -8,7 +8,7 @@ from models.package import LOCATIONS
 class Location:
     DATE_FORMAT = "%d-%m-%Y %H:%M:%S"
 
-    def __init__(self, name: str, arrival_time_str: str = None, departure_time_str: str = None):
+    def __init__(self, name: str, arrival_time_str: str = "", departure_time_str: str = ""):
         self.validate_name(name)
         self._name = name
         self._arrival_time = self.parse_datetime(arrival_time_str) if arrival_time_str else None

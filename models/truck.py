@@ -51,5 +51,3 @@ class Truck:
         return self._max_range
     
     
-
-

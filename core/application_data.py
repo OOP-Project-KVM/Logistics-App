@@ -74,3 +74,16 @@ class ApplicationData:
 
     def view_trucks(self):
         return "\n".join(str(truck) for truck in self._trucks)
+    
+  
+
+    def get_route_by_id(self, id):
+        for route in self._routes:
+            if route.id == id:
+                return route
+            
+    def get_truck_by_id(self, truck_id: int):
+        for truck in self._trucks:
+            if truck.id == truck_id:
+                return truck
+      
