@@ -12,7 +12,7 @@
 # set_availability(self, status): sets the availability status of the truck.
 
 
-from status import Status
+from models.status import Status
 
 
 class Truck:

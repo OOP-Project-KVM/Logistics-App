@@ -1,8 +1,8 @@
 from typing import List,Optional
-from location import Location
-from truck import Truck
-from package import Package
-from status import Status
+from models.location import Location
+from models.truck import Truck
+from models.package import Package
+from models.status import Status
 from datetime import datetime, timedelta
 
 
