@@ -15,11 +15,11 @@ class ApplicationData:
     
     @property
     def routes(self):
-        return tuple(self._packages)
+        return tuple(self._routes)
     
     @property
     def trucks(self):
-        return tuple(self._packages)
+        return tuple(self._trucks)
     
     def initalize_trucks(self):
         self._trucks.extend([Truck(id,'Scania',42000,8000) for id in range(1001,1011)])
