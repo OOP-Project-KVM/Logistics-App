@@ -43,4 +43,6 @@ class Truck:
     def max_range(self) -> float:
         return self._max_range
     
-    
+    def set_truck_status(self, status: Status):
+        self._is_free = status
+        return self._is_free
