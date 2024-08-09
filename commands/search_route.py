@@ -4,4 +4,13 @@
 
 # Output: List of matching routes with details
 
-#MYKYTA
+from commands.base_command import BaseCommand
+
+class SearchRouteCommand(BaseCommand):
+    def execute(self):
+        start_location = self.params[0]
+        end_location = self.params[1]
+
+        result = self.app_data.search_route(start_location, end_location)
+
+        return result

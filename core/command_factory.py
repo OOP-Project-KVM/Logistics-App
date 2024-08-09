@@ -3,6 +3,8 @@ from models.truck import Truck
 from models.package import Package
 from models.location import Location
 from core.application_data import ApplicationData
+from commands.search_route import SearchRouteCommand
+from commands.create_route import CreateRouteCommand
 
 # CreatePackageCommand , ViewUnassignedPackagesCommand, CreateRouteCommand
 # SearchRouteCommand , AssignPackageToRouteCommand , ViewRoutesCommand 
@@ -16,18 +18,20 @@ class CommandFactory:
 
     def create(self, input_line):
         command, *params = input_line.split()
-        if command == "createpackage":
+        if command.lower() == "createpackage":
             return (params, self._app_data)
-        elif command == 'createroute':
+        elif command.lower() == 'createroute':
             return (params, self._app_data)
-        elif command == "assigntrucktoroute":
+        elif command.lower() == "assigntrucktoroute":
             return (params, self._app_data)
-        elif command == "assignpackage":
+        elif command.lower() == "assignpackage":
             return (params, self._app_data)
-        elif command == "viewroutes":
+        elif command.lower() == "viewroutes":
             return (params, self._app_data)
-        elif command == "viewpackagedetails":
+        elif command.lower() == "viewpackagedetails":
             return (params, self._app_data)
-        elif command == "viewtrucks":
+        elif command.lower() == "viewtrucks":
+            return (params, self._app_data)
+        elif command.lower() == "searchroute":
             return (params, self._app_data)
        

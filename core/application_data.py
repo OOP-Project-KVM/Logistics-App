@@ -38,7 +38,7 @@ class ApplicationData:
     def search_route(self, start_location, end_location):
         all_routes = []
         for route in self._routes:
-            if start_location in route.locations and end_location in route.locations:
+            if start_location in route.locations[0] and end_location in route.locations[-1]:
                 start_index = route.locations.index(start_location)
                 end_index = route.locations.index(end_location)
                 if start_index < end_index:
