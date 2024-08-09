@@ -38,11 +38,8 @@ class ApplicationData:
     def search_route(self, start_location, end_location):
         all_routes = []
         for route in self._routes:
-            if start_location in route.locations[0] and end_location in route.locations[-1]:
-                start_index = route.locations.index(start_location)
-                end_index = route.locations.index(end_location)
-                if start_index < end_index:
-                    all_routes.append(route)
+            if start_location == route.locations[0].name and end_location == route.locations[-1].name:
+                all_routes.append(route)
         return all_routes
 
     def update_route_assign_truck(self, route_id, truck_id):

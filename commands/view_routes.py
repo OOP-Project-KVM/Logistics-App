@@ -5,4 +5,11 @@
 
 # Output: List of all routes with details.
 
-#MYKYTA
+from commands.base_command import BaseCommand
+
+
+class ViewRouteCommand(BaseCommand):
+    def execute(self):
+        result = self.app_data.view_routes()
+
+        return "There are currently no roads. You have to create roads first." if len(result) == 0 else result

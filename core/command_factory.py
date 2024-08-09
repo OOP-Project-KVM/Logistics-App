@@ -21,7 +21,7 @@ class CommandFactory:
         if command.lower() == "createpackage":
             return (params, self._app_data)
         elif command.lower() == 'createroute':
-            return (params, self._app_data)
+            return CreateRouteCommand(params, self._app_data)
         elif command.lower() == "assigntrucktoroute":
             return (params, self._app_data)
         elif command.lower() == "assignpackage":
@@ -33,5 +33,5 @@ class CommandFactory:
         elif command.lower() == "viewtrucks":
             return (params, self._app_data)
         elif command.lower() == "searchroute":
-            return (params, self._app_data)
+            return SearchRouteCommand(params, self._app_data)
        
