@@ -1,10 +1,7 @@
-from models.route import Route
-from models.truck import Truck
-from models.package import Package
-from models.location import Location
 from core.application_data import ApplicationData
 from commands.search_route import SearchRouteCommand
 from commands.create_route import CreateRouteCommand
+from commands.view_routes import ViewRouteCommand
 
 # CreatePackageCommand , ViewUnassignedPackagesCommand, CreateRouteCommand
 # SearchRouteCommand , AssignPackageToRouteCommand , ViewRoutesCommand 
@@ -27,7 +24,7 @@ class CommandFactory:
         elif command.lower() == "assignpackage":
             return (params, self._app_data)
         elif command.lower() == "viewroutes":
-            return (params, self._app_data)
+            return ViewRouteCommand(params, self._app_data)
         elif command.lower() == "viewpackagedetails":
             return (params, self._app_data)
         elif command.lower() == "viewtrucks":
