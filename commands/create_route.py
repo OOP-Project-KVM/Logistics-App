@@ -13,6 +13,10 @@ from models.location import Location
 
 
 class CreateRouteCommand(BaseCommand):
+    def __init__(self, params: list[str], app_data):
+        super().__init__(params, app_data)
+
+
     def execute(self):
         route_id = int(self.params[0])
         location_names = self.params[1:]

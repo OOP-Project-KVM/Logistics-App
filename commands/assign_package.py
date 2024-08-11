@@ -6,10 +6,13 @@
 
 # VIKTORю
 from commands.base_command import BaseCommand
+from core.application_data import ApplicationData
 
 
 
-class AssignPackageCommand(BaseCommand):
+class AssignPackageToRouteCommand(BaseCommand):
+    def __init__(self, params: list[str], app_data: ApplicationData):
+        super().__init__(params, app_data)
 
     def execute(self):
         package_id = int(self.params[0])
@@ -20,7 +23,7 @@ class AssignPackageCommand(BaseCommand):
         if route is None:
             return f"Error: Truck with ID {route_id} not found."
 
-        package = self.app_data.get_package_by_id(package_id)
+        package = self.app_data.get_package_by_id(package_id) # type: ignore
         if package is None:
             return f"Error: Package with ID {package_id} not found."
 
