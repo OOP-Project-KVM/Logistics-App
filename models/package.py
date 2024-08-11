@@ -39,7 +39,6 @@ class Package:
         Package.all_ids.add(id_pack)
         Package.customer_info[id_pack] = customer_contact
 
-
     @property
     def id_pack(self):
         return self._id_pack
