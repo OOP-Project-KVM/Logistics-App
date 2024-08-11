@@ -101,8 +101,9 @@ class Route:
     def __str__(self):
         location = [loc.name for loc in self.locations]
         weight = sum([w.weight for w in self.packages])
+        truck = self.truck
         return (f"Id: {self.id}\n"
                 f"Locations: {location}\n"
-                f"Truck: {self.truck}\n"
+                f"Truck: {truck.model}\n" # type: ignore
                 f"Weight: {weight:.2f}\n"
                 f"Current Location: {self.current_location}")

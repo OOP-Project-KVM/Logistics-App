@@ -11,4 +11,4 @@ from models.status import Status
 from models.package import Package
 
 class AssignPackageToRouteCommand(BaseCommand):
-    raise NotImplementedError
+    pass

@@ -39,7 +39,21 @@ class ApplicationData:
         for route in self._routes:
             if start_location == route.locations[0].name and end_location == route.locations[-1].name:
                 all_routes.append(route)
-        return all_routes
+
+        if not all_routes:
+            return f'No routes found for {start_location} -> {end_location}'
+    
+        output = ''
+        for route in all_routes:
+            route_output = ''
+            for i, el in enumerate(route.locations):
+                route_output += f'{el.name}'
+                if i < len(route.locations) - 1:
+                    route_output += ' -> '
+            output += route_output + '\n' 
+
+        return output.strip()  
+
 
     def update_route_assign_truck(self, route_id, truck_id):
         truck = next((t for t in self._trucks if t.id == truck_id), None)

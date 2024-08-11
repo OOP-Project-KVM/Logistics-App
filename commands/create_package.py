@@ -12,4 +12,4 @@ from models.package import Package
 from models.location import Location
 
 class CreatePackageCommand(BaseCommand):
-    raise NotImplementedError
+    pass
