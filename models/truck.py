@@ -12,7 +12,7 @@
 # set_availability(self, status): sets the availability status of the truck.
 
 
-from status import Status
+from models.status import Status
 
 
 class Truck:
@@ -43,4 +43,6 @@ class Truck:
     def max_range(self) -> float:
         return self._max_range
     
-    
+    def set_truck_status(self, status: Status):
+        self._is_free = status
+        return self._is_free

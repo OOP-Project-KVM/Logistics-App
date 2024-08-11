@@ -1,8 +1,8 @@
 from typing import List,Optional
-from location import Location
-from truck import Truck
-from package import Package
-from status import Status
+from models.location import Location
+from models.truck import Truck
+from models.package import Package
+from models.status import Status
 from datetime import datetime, timedelta
 
 
@@ -97,3 +97,12 @@ class Route:
             return f"Delivered packages at {self._current_location.name}: {[package.id_pack for package in delivered_packages]}"
         else:
             return f"No packages delivered at {self._current_location.name}."
+
+    def __str__(self):
+        location = [loc.name for loc in self.locations]
+        weight = sum([w.weight for w in self.packages])
+        return (f"Id: {self.id}\n"
+                f"Locations: {location}\n"
+                f"Truck: {self.truck}\n"
+                f"Weight: {weight:.2f}\n"
+                f"Current Location: {self.current_location}")

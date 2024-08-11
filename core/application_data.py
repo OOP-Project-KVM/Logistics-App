@@ -15,17 +15,16 @@ class ApplicationData:
     
     @property
     def routes(self):
-        return tuple(self._packages)
+        return tuple(self._routes)
     
     @property
     def trucks(self):
-        return tuple(self._packages)
+        return tuple(self._trucks)
     
     def initalize_trucks(self):
         self._trucks.extend([Truck(id,'Scania',42000,8000) for id in range(1001,1011)])
         self._trucks.extend([Truck(id,'MAN',37000,10000) for id in range(1011,1026)])
         self._trucks.extend([Truck(id,'Actros',26000,13000) for id in range(1026,1041)])
-
 
     def create_package(self, id, start_location, end_location, weight, customer_contact):
         package = Package(id, start_location, end_location, weight, customer_contact)
@@ -38,11 +37,8 @@ class ApplicationData:
     def search_route(self, start_location, end_location):
         all_routes = []
         for route in self._routes:
-            if start_location in route.locations and end_location in route.locations:
-                start_index = route.locations.index(start_location)
-                end_index = route.locations.index(end_location)
-                if start_index < end_index:
-                    all_routes.append(route)
+            if start_location == route.locations[0].name and end_location == route.locations[-1].name:
+                all_routes.append(route)
         return all_routes
 
     def update_route_assign_truck(self, route_id, truck_id):
@@ -57,10 +53,8 @@ class ApplicationData:
         if route is None:
             raise ValueError(f'Route with ID {route_id} not found')
 
-
         route.assign_truck(truck)
         
-
     def update_route_assign_package(self, route_id, package_id):
         route = next((r for r in self._routes if r.id == route_id), None)
         if not route:
@@ -81,8 +75,6 @@ class ApplicationData:
     def view_trucks(self):
         return "\n".join(str(truck) for truck in self._trucks)
     
-  
-
     def get_route_by_id(self, id):
         for route in self._routes:
             if route.id == id:

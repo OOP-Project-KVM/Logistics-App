@@ -10,7 +10,7 @@ from commands.base_command import BaseCommand
 
 from models.status import Status
 
-class AssignTruckToRoute(BaseCommand):
+class AssignTruckToRouteCommand(BaseCommand):
     def execute(self):
         truck_id = int(self.params[0])
         route_id = int(self.params[1])
@@ -24,5 +24,5 @@ class AssignTruckToRoute(BaseCommand):
             return f"Error: Route with ID {route_id} not found."
 
         route.assign_truck(truck)
-        truck.is_free = Status.BUSY
+        truck.set_truck_status(Status.BUSY)
         return f"Truck {truck.id} assigned to route {route.id}."
