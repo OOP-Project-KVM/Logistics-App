@@ -6,3 +6,10 @@
 # Output: Confirmation of package creation with unique ID.
 
 #VIKTOR
+
+from commands.base_command import BaseCommand
+from models.package import Package
+from models.location import Location
+
+class CreatePackageCommand(BaseCommand):
+    raise NotImplementedError

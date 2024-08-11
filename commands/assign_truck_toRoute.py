@@ -10,7 +10,7 @@ from commands.base_command import BaseCommand
 
 from models.status import Status
 
-class AssignTruckToRoute(BaseCommand):
+class AssignTruckToRouteCommand(BaseCommand):
     def execute(self):
         truck_id = int(self.params[0])
         route_id = int(self.params[1])

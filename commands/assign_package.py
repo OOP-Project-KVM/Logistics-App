@@ -5,3 +5,10 @@
 # Output: Confirmation of package assignment to the route.
 
 # VIKTOR
+
+from commands.base_command import BaseCommand
+from models.status import Status
+from models.package import Package
+
+class AssignPackageToRouteCommand(BaseCommand):
+    raise NotImplementedError
