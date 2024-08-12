@@ -27,4 +27,4 @@ class CreateRouteCommand(BaseCommand):
 
         locations = [Location(name) for name in location_names]
         self.app_data.create_route(route_id,locations)
-        return f"Route {route_id} created."
+        return f"Route {route_id} created."  

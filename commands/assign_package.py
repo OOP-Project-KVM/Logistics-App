@@ -22,10 +22,10 @@ class AssignPackageToRouteCommand(BaseCommand):
         if route is None:
             return f"Error: Route with ID {route_id} not found."
 
-        package = self.app_data.get_package_by_id(package_id)  # type: ignore
+        package = self.app_data.get_package_by_id(package_id)  
         if package is None:
             return f"Error: Package with ID {package_id} not found."
 
         route.assign_package(package)
 
-        return f"Package {package.id} assigned to route {route.id}."
+        return f"Package {package.id_pack} assigned to route {route.id}."

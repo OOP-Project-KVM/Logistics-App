@@ -24,7 +24,6 @@ class CreatePackageCommand(BaseCommand):
         weight = float(self.params[3])
         customer_contact = self.params[4]
 
-        new_package = Package(id_pack, start_location, end_location, weight, customer_contact)
-        self.app_data.create_package(new_package) # type: ignore
+        self.app_data.create_package(id_pack, start_location, end_location, weight, customer_contact)
 
         return f"Package {id_pack} created successfully."
