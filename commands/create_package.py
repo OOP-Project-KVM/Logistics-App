@@ -18,12 +18,12 @@ class CreatePackageCommand(BaseCommand):
         if len(self.params) != 5:
             return "Error: Invalid number of parameters. Expected 5 parameters."
 
-        id_pack = self.params[0]
+        id = self.params[0]
         start_location = self.params[1].upper()
         end_location = self.params[2].upper()
         weight = float(self.params[3])
         customer_contact = self.params[4]
 
-        self.app_data.create_package(id_pack, start_location, end_location, weight, customer_contact)
+        self.app_data.create_package(id, start_location, end_location, weight, customer_contact)
 
-        return f"Package {id_pack} created successfully."
+        return f"Package {id} created successfully."

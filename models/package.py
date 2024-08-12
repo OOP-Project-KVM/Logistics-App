@@ -101,7 +101,7 @@ class Package:
 
     def __str__(self):
         return (f"Package Details:\n"
-                f"ID: {self.id_pack}\n"
+                f"ID: {self.id}\n"
                 f"From: {self.start_location}\n"
                 f"To: {self.end_location}\n"
                 f"Distance: {self.distance}km\n"

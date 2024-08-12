@@ -69,7 +69,7 @@ class Route:
         # truck.is_free = Status.BUSY.value
 
     def assign_package(self, package: Package):
-        if package.id_pack in [p.id_pack for p in self._packages]:
+        if package.id in [p.id for p in self._packages]:
             raise ValueError("Package is already assigned to this route.")
         package.pack_status = PackageStatus.OUTFORDELIVERY
         self._packages.append(package)
@@ -96,7 +96,7 @@ class Route:
                 self._packages.remove(package)
         
         if delivered_packages:
-            return f"Delivered packages at {self._current_location.name}: {[package.id_pack for package in delivered_packages]}"
+            return f"Delivered packages at {self._current_location.name}: {[package.id for package in delivered_packages]}"
         else:
             return f"No packages delivered at {self._current_location.name}."
 

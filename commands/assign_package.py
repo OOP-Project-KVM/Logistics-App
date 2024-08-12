@@ -28,4 +28,4 @@ class AssignPackageToRouteCommand(BaseCommand):
 
         route.assign_package(package)
 
-        return f"Package {package.id_pack} assigned to route {route.id}."
+        return f"Package {package.id} assigned to route {route.id}."
