@@ -4,10 +4,9 @@
 
 # Output: Confirmation of package assignment to the route.
 
-# VIKTORю
+# VIKTOR
 from commands.base_command import BaseCommand
 from core.application_data import ApplicationData
-
 
 
 class AssignPackageToRouteCommand(BaseCommand):
@@ -21,9 +20,9 @@ class AssignPackageToRouteCommand(BaseCommand):
         route = self.app_data.get_route_by_id(route_id)
 
         if route is None:
-            return f"Error: Truck with ID {route_id} not found."
+            return f"Error: Route with ID {route_id} not found."
 
-        package = self.app_data.get_package_by_id(package_id) # type: ignore
+        package = self.app_data.get_package_by_id(package_id)  # type: ignore
         if package is None:
             return f"Error: Package with ID {package_id} not found."
 

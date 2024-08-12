@@ -98,4 +98,9 @@ class ApplicationData:
         for truck in self._trucks:
             if truck.id == truck_id:
                 return truck
+
+    def get_package_by_id(self, package_id: int):
+        for package in self._packages:
+            if package.id_pack == package_id:
+                return package
       
