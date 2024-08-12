@@ -40,8 +40,6 @@ class CommandFactory:
             return LoginUserCommand(params, self._app_data)
         elif command.lower() == 'logoutuser':
             return LogoutUserCommand(params, self._app_data)
-        # elif command.lower() == "viewtrucks":
-        #     return (params, self._app_data)
         elif command.lower() == "searchroute":
             return SearchRouteCommand(params, self._app_data)
        
