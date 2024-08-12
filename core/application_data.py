@@ -1,8 +1,9 @@
+from re import escape
 from models.package import Package
 from models.route import Route
 from models.truck import Truck, Status
 from models.user import User
-
+from models.roles import Roles
 
 class ApplicationData:
         
@@ -68,8 +69,11 @@ class ApplicationData:
         self._trucks.extend([Truck(id,'Actros',26000,13000) for id in range(1026,1041)])
 
     def create_package(self, id, start_location, end_location, weight, customer_contact):
-        package = Package(id, start_location, end_location, weight, customer_contact)
-        self._packages.append(package)
+        if self._logged_user == Roles.MANAGER:
+            package = Package(id, start_location, end_location, weight, customer_contact)
+            self._packages.append(package)
+        else:
+            return "you are not a manager."
 
     def create_route(self, id, locations):
         route = Route(id, locations)
