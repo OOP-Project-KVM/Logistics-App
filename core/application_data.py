@@ -1,6 +1,8 @@
 from models.package import Package
 from models.route import Route
 from models.truck import Truck, Status
+from models.user import User
+
 
 class ApplicationData:
         
@@ -8,7 +10,23 @@ class ApplicationData:
         self._packages: list[Package] = []
         self._routes: list[Route] = []
         self._trucks: list[Truck] = []
+        self._users: list[User] = []
+        self._logged_user = None
 
+    @property
+    def logged_in_user(self):
+        if self.has_logged_in_user:
+            return self._logged_user
+        else:
+            raise ValueError('There is no logged in user.')
+
+    @property
+    def has_logged_in_user(self):
+        return self._logged_user is not None
+
+    @property
+    def users(self):
+        return tuple(self._users)
     @property
     def packages(self):
         return tuple(self._packages)
@@ -20,7 +38,25 @@ class ApplicationData:
     @property
     def trucks(self):
         return tuple(self._trucks)
-    
+
+    def find_user_by_username(self, username: str) -> User:
+        filtered = [user for user in self._users if user.username == username]
+        if not filtered:
+            raise ValueError(f'There is no user with username {username}!')
+
+        return filtered[0]
+
+    def registrate_user(self, username, first_name, last_name, password, role, contact):
+        user = User(username, first_name, last_name, password, role, contact)
+        if username in self._users:
+            raise ValueError(f"user with username:{username} already exists choose a different name!")
+        self._users.append(user)
+
+    def login(self, user: User):
+        self._logged_user = user
+
+    def logout(self):
+        self._logged_user = None
     def initalize_trucks(self):
         self._trucks.extend([Truck(id,'Scania',42000,8000) for id in range(1001,1011)])
         self._trucks.extend([Truck(id,'MAN',37000,10000) for id in range(1011,1026)])
@@ -74,7 +110,7 @@ class ApplicationData:
         if not route:
             raise ValueError(f'Route with ID {route_id} not found')
 
-        package = next((p for p in self._packages if p.id_pack == package_id), None)
+        package = next((p for p in self._packages if p.id == package_id), None)
         if  package is None:
             raise ValueError(f'Package with ID {package_id} not found')
 
@@ -101,6 +137,6 @@ class ApplicationData:
 
     def get_package_by_id(self, package_id: int):
         for package in self._packages:
-            if package.id_pack == package_id:
+            if package.id == package_id:
                 return package
       

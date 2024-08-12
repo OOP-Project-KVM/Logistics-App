@@ -1,4 +1,8 @@
 from commands.assign_package import AssignPackageToRouteCommand
+from commands.login_user import LoginUserCommand
+from commands.logout_user import LogoutUserCommand
+from commands.register_user import RegisterUserCommand
+from commands.view_packageDetails import ViewPackageDetails
 from core.application_data import ApplicationData
 from commands.search_route import SearchRouteCommand
 from commands.create_route import CreateRouteCommand
@@ -28,8 +32,14 @@ class CommandFactory:
             return AssignPackageToRouteCommand(params, self._app_data)
         elif command.lower() == "viewroutes":
             return ViewRouteCommand(params, self._app_data)
-        # elif command.lower() == "viewpackagedetails":
-        #     return (params, self._app_data)
+        elif command.lower() == "viewpackagedetails":
+            return ViewPackageDetails(params, self._app_data)
+        elif command.lower() == 'registeruser':
+            return RegisterUserCommand(params, self._app_data)
+        elif command.lower() == 'loginuser':
+            return LoginUserCommand(params, self._app_data)
+        elif command.lower() == 'logoutuser':
+            return LogoutUserCommand(params, self._app_data)
         # elif command.lower() == "viewtrucks":
         #     return (params, self._app_data)
         elif command.lower() == "searchroute":

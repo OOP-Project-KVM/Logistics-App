@@ -29,7 +29,7 @@ class Package:
         self.validate_customer_contact(customer_contact)
         self.validate_locations(start_location, end_location)
 
-        self._id_pack = id_pack
+        self._id = id_pack
         self._start_location = start_location
         self._end_location = end_location
         self._weight = weight
@@ -41,8 +41,8 @@ class Package:
         Package.customer_info[id_pack] = customer_contact
 
     @property
-    def id_pack(self):
-        return self._id_pack
+    def id(self):
+        return self._id
 
     @property
     def start_location(self):
