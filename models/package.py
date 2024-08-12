@@ -1,3 +1,4 @@
+from models.package_status import PackageStatus
 LOCATIONS = ["SYD", "MEL", "ADL", "ASP", "BRI", "DAR", "PER"]
 DISTANCE_TABLE = {
     "SYD": {"MEL": 877, "ADL": 1376, "ASP": 2762, "BRI": 909, "DAR": 3935, "PER": 4016},
@@ -34,7 +35,7 @@ class Package:
         self._weight = weight
         self._customer_contact = customer_contact
         self.distance = get_distance(start_location, end_location)
-        self.is_delivered = False
+        self.pack_status = PackageStatus.TOBEASSIGNED
 
         Package.all_ids.add(id_pack)
         Package.customer_info[id_pack] = customer_contact
@@ -105,5 +106,6 @@ class Package:
                 f"To: {self.end_location}\n"
                 f"Distance: {self.distance}km\n"
                 f"Weight: {self.weight} kg\n"
+                f"Status:{self.pack_status}\n"
                 f"Customer Contact: {self.customer_contact}")
 

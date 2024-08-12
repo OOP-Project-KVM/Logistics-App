@@ -27,4 +27,5 @@ class AssignPackageToRouteCommand(BaseCommand):
             return f"Error: Package with ID {package_id} not found."
 
         route.assign_package(package)
+
         return f"Package {package.id} assigned to route {route.id}."

@@ -1,5 +1,6 @@
 from typing import List,Optional
 from models.location import Location
+from models.package_status import PackageStatus
 from models.truck import Truck
 from models.package import Package
 from models.status import Status
@@ -70,6 +71,7 @@ class Route:
     def assign_package(self, package: Package):
         if package.id_pack in [p.id_pack for p in self._packages]:
             raise ValueError("Package is already assigned to this route.")
+        package.pack_status = PackageStatus.OUTFORDELIVERY
         self._packages.append(package)
 
     def update_current_location(self, location: Location, eta: datetime):
@@ -87,7 +89,7 @@ class Route:
         if current_time >= self._current_eta:
             for package in self._packages:
                 if package.end_location == self._current_location.name:
-                    package.is_delivered = True
+                    package.pack_status = PackageStatus.DELIVERED
                     
             
             for package in delivered_packages:
