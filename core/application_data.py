@@ -1,4 +1,6 @@
+from math import log
 from re import escape
+from models import user
 from models.package import Package
 from models.route import Route
 from models.truck import Truck, Status
@@ -14,12 +16,14 @@ class ApplicationData:
         self._users: list[User] = []
         self._logged_user = None
 
+
     @property
     def logged_in_user(self):
         if self.has_logged_in_user:
             return self._logged_user
         else:
            return f'There is no logged in user with that username!'
+    
 
     @property
     def has_logged_in_user(self):
@@ -69,7 +73,9 @@ class ApplicationData:
         self._trucks.extend([Truck(id,'Actros',26000,13000) for id in range(1026,1041)])
 
     def create_package(self, id, start_location, end_location, weight, customer_contact):
-        if self._logged_user == Roles.MANAGER:
+        if self._logged_user is not None:
+            self._logged_user = self.find_user_by_username(self._logged_user.username)
+        if self._logged_user.role == Roles.MANAGER:
             package = Package(id, start_location, end_location, weight, customer_contact)
             self._packages.append(package)
         else:
