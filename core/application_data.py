@@ -69,15 +69,12 @@ class ApplicationData:
         self._trucks.extend([Truck(id,'Actros',26000,13000) for id in range(1026,1041)])
 
     def create_package(self, id, start_location, end_location, weight, customer_contact):
-        if self._logged_user == Roles.MANAGER:
-            package = Package(id, start_location, end_location, weight, customer_contact)
-            self._packages.append(package)
-        else:
-            return "you are not a manager."
+        package = Package(id, start_location, end_location, weight, customer_contact)
+        self._packages.append(package)
 
     def create_route(self, id, locations):
-        route = Route(id, locations)
-        self._routes.append(route)
+            route = Route(id, locations)
+            self._routes.append(route)
 
     def search_route(self, start_location, end_location):
         all_routes = []
