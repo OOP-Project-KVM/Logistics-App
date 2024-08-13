@@ -2,7 +2,7 @@ from models.roles import Roles
 
 
 class User:
-    def __init__(self, username, first_name, last_name, password, user_role: Roles, contact):
+    def __init__(self, username, first_name, last_name, password, user_role, contact):
         self.last_name = self.validate_last_name(last_name)
         self.first_name = self.validate_first_name(first_name)
         self.username = self.validate_username(username)

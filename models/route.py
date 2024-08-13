@@ -1,8 +1,9 @@
 from typing import List,Optional
+from models import package
 from models.location import Location
 from models.package_status import PackageStatus
 from models.truck import Truck
-from models.package import Package
+from models.package import Package, DISTANCE_TABLE
 from models.status import Status
 from datetime import datetime, timedelta
 
@@ -17,6 +18,15 @@ class Route:
          self._packages: List[Package] = []
          self._current_location: Optional[Location] = None
          self._current_eta: Optional[datetime] = None
+         self._departure_time: Optional[datetime] = None
+
+    @property
+    def departure_time(self) -> Optional[datetime]:
+        return self._departure_time
+
+    @departure_time.setter
+    def departure_time(self, departure: datetime): 
+        self._departure_time = departure
 
     @property
     def id(self) -> int:
@@ -101,11 +111,20 @@ class Route:
             return f"No packages delivered at {self._current_location.name}."
 
     def __str__(self):
-        location = [loc.name for loc in self.locations]
-        weight = sum([w.weight for w in self.packages])
-        truck = self.truck
-        return (f"Id: {self.id}\n"
-                f"Locations: {location}\n"
-                f"Truck: {truck.model}\n" # type: ignore
-                f"Weight: {weight:.2f}\n"
-                f"Current Location: {self.current_location}")
+            location = [loc.name for loc in self.locations]
+            weight = sum([w.weight for w in self.packages])
+            total_distance = 0
+            for i in range(len(location) - 1):
+                total_distance += DISTANCE_TABLE[location[i]][location[i + 1]]
+    
+            truck = self.truck
+            departure_time_str = "06:00h"
+            eta_str = str(self._current_eta - datetime.now()) if self._current_eta else "Not set"
+            return (f"Id: {self.id}\n"
+                    f"Locations: {location}\n"
+                    f"Truck: {truck.model if truck else 'None'}\n"  # type: ignore
+                    f"Weight: {weight:.2f}\n"
+                    f"Current Location: {self.current_location.name if self.current_location else 'None'}\n"
+                    f"Distance: {total_distance}\n"
+                    f"Departure time: {timedelta(seconds=departure_time_str)}\n" # type: ignore
+                    f"ETA: {timedelta(seconds=eta_str)}")  # type: ignore
