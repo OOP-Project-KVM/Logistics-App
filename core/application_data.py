@@ -170,8 +170,8 @@ class ApplicationData:
         locations = route.locations
         total_distance = 0
         for i in range(len(route.locations) - 1):
-            start_location = locations[i].name
-            end_location = locations[i + 1].name
+            start_location = locations[i].name.upper()
+            end_location = locations[i + 1].name.upper()
             distance = DISTANCE_TABLE[start_location][end_location]
             total_distance += distance
         return total_distance
@@ -200,34 +200,7 @@ class ApplicationData:
         return None
     
     
-    def assign_package_to_route(self, package_id: str, route_id: str, departure_date: datetime):
-        package = self.get_package_by_id(package_id)
-        route = self.get_route_by_id(route_id)
-
-        if package is None:
-            raise ValueError(f"Package with ID {package_id} not found.")
     
-        if route is None:
-            raise ValueError(f"Route with ID {route_id} not found.")
-    
-        if not route.truck:
-            raise ValueError("Cannot assign package to a route with no truck assigned.")
-
-        route_departure_time = datetime.combine(departure_date, time(6, 0))
-        route.departure_time = route_departure_time
-
-        start_location = route.locations[0].name
-        destination = package.end_location
-        total_distance = DISTANCE_TABLE[start_location][destination]
-
-        # Calculate the arrival time based on the fixed departure time and distance
-        arrival_time = self.calculate_arrival_time(route_departure_time, total_distance)
-
-        # Assign the package to the route and set its expected arrival time
-        route.assign_package(package)
-        package.expected_arrival_time = arrival_time
-
-        print(f"Package {package.id} assigned to Route {route.id} with expected arrival at {arrival_time}")
 
 
     def search_route(self, start_location: str, end_location: str):
@@ -265,6 +238,9 @@ class ApplicationData:
                         loc_time += timedelta(hours=distance / 87)  # Add travel time based on distance and speed
                 
                     formatted_time = loc_time.strftime('%b %dth %H:%M')
+
+                    if loc_name == end_location:
+                        eta_for_city = loc_time  # Save the ETA for the destination city
                 
                     if i < end_index:
                         print(f"{loc_name} ({formatted_time}) → ", end="")
@@ -272,3 +248,31 @@ class ApplicationData:
                         print(f"{loc_name} ({formatted_time})")
         else:
             print(f"No routes found from {start_location} to {end_location}.")
+        
+    
+    def calculate_eta_for_route(self, route: Route, destination: str):
+        """
+        Calculate the ETA for a specific destination on a given route.
+        """
+        destination = destination.upper()
+        departure_time = datetime.now().date() + timedelta(days=1)
+        loc_time = datetime.combine(departure_time, time(6, 0))  # Start at 6 AM
+
+        location_names = [loc.name for loc in route.locations]
+
+        if destination in location_names:
+            start_index = location_names.index(route.locations[0].name)
+            end_index = location_names.index(destination)
+            
+            for i in range(start_index, end_index + 1):
+                loc_name = route.locations[i].name
+                
+                if i > start_index:  # Skip this for the first location since it's the departure point
+                    prev_loc_name = route.locations[i - 1].name
+                    distance = DISTANCE_TABLE[prev_loc_name][loc_name]
+                    loc_time += timedelta(hours=distance / 87)  # Add travel time based on distance and speed
+                
+                if loc_name == destination:
+                    return loc_time  # Return the ETA for the destination
+
+        return None  # Return None if the destination is not on the route

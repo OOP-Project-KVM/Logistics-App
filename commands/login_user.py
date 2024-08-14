@@ -17,7 +17,7 @@ class LoginUserCommand(BaseCommand):
         
         user = self._app_data.find_user_by_username(username)
         if user.password != password: 
-            raise ValueError("Wrong username or password!")
+            return f"Wrong username or password!"
         else:
             self._app_data.login(user)
 

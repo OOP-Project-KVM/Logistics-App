@@ -16,7 +16,7 @@ class Route:
         self._packages: List[Package] = []
         self._current_location: Optional[Location] = None
         self._current_eta: Optional[datetime] = None
-        departure_date = datetime.now().date()
+        departure_date = datetime.now().date() + timedelta(days=1)  # Departure date is always the next day
         self._departure_time: datetime = datetime.combine(departure_date, time(6, 0))
         self._current_load = 0.0  # Current load in kg
 
@@ -97,10 +97,13 @@ class Route:
         """
         if not self._truck:
             raise ValueError("Cannot assign package to a route with no truck assigned.")
+        
         if not self.has_capacity(package.weight):
             raise ValueError("Route cannot accept this package; capacity exceeded.")
+        
         if package.id in [p.id for p in self._packages]:
             raise ValueError("Package is already assigned to this route.")
+        
         package.pack_status = PackageStatus.OUTFORDELIVERY
         self._packages.append(package)
         self._current_load += package.weight
