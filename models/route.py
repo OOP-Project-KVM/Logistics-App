@@ -1,24 +1,24 @@
-from typing import List,Optional
+from typing import List, Optional
 from models import package
 from models.location import Location
 from models.package_status import PackageStatus
 from models.truck import Truck
 from models.package import Package, DISTANCE_TABLE
 from models.status import Status
-from datetime import datetime, timedelta
-
-
+from datetime import datetime, timedelta,time
 
 
 class Route:
     def __init__(self, id: int, locations: List[Location]):
-         self._id = id
-         self._locations = locations
-         self._truck: Optional[Truck] = None
-         self._packages: List[Package] = []
-         self._current_location: Optional[Location] = None
-         self._current_eta: Optional[datetime] = None
-         self._departure_time: Optional[datetime] = None
+        self._id = id
+        self._locations = locations
+        self._truck: Optional[Truck] = None
+        self._packages: List[Package] = []
+        self._current_location: Optional[Location] = None
+        self._current_eta: Optional[datetime] = None
+        departure_date = datetime.now().date()
+        self._departure_time: datetime = datetime.combine(departure_date, time(6, 0))
+        self._current_load = 0.0  # Current load in kg
 
     @property
     def departure_time(self) -> Optional[datetime]:
@@ -72,22 +72,48 @@ class Route:
     def current_eta(self, eta: datetime):
         self._current_eta = eta
 
-    def assign_truck(self, truck: Truck):
-        if truck.is_free != Status.AVAILABLE:
-            raise ValueError("Truck is not available.")
-        self._truck = truck
-        # truck.is_free = Status.BUSY.value
+    @property
+    def max_capacity(self) -> float:
+        """
+        The maximum capacity is determined by the assigned truck.
+        """
+        if self._truck:
+            return self._truck.capacity
+        return 0.0  # No capacity if no truck is assigned
+
+    @property
+    def current_load(self) -> float:
+        return self._current_load
+
+    def has_capacity(self, package_weight: float) -> bool:
+        """
+        Check if the route has enough capacity to add a new package.
+        """
+        return (self._current_load + package_weight) <= self.max_capacity
 
     def assign_package(self, package: Package):
+        """
+        Assign a package to the route if there is enough capacity.
+        """
+        if not self._truck:
+            raise ValueError("Cannot assign package to a route with no truck assigned.")
+        if not self.has_capacity(package.weight):
+            raise ValueError("Route cannot accept this package; capacity exceeded.")
         if package.id in [p.id for p in self._packages]:
             raise ValueError("Package is already assigned to this route.")
         package.pack_status = PackageStatus.OUTFORDELIVERY
         self._packages.append(package)
+        self._current_load += package.weight
+
+    def assign_truck(self, truck: Truck):
+        if truck.is_free != Status.AVAILABLE:
+            raise ValueError("Truck is not available.")
+        self._truck = truck
+        self._current_load = 0.0  # Reset load since we're assigning a new truck
 
     def update_current_location(self, location: Location, eta: datetime):
         self._current_location = location
         self._current_eta = eta
-
 
     def check_and_unload_packages(self):
         if self._current_location is None or self._current_eta is None:
@@ -100,10 +126,11 @@ class Route:
             for package in self._packages:
                 if package.end_location == self._current_location.name:
                     package.pack_status = PackageStatus.DELIVERED
-                    
+                    delivered_packages.append(package)
             
             for package in delivered_packages:
                 self._packages.remove(package)
+                self._current_load -= package.weight
         
         if delivered_packages:
             return f"Delivered packages at {self._current_location.name}: {[package.id for package in delivered_packages]}"
@@ -111,20 +138,21 @@ class Route:
             return f"No packages delivered at {self._current_location.name}."
 
     def __str__(self):
-            location = [loc.name for loc in self.locations]
-            weight = sum([w.weight for w in self.packages])
-            total_distance = 0
-            for i in range(len(location) - 1):
-                total_distance += DISTANCE_TABLE[location[i]][location[i + 1]]
-    
-            truck = self.truck
-            departure_time_str = "06:00h"
-            eta_str = str(self._current_eta - datetime.now()) if self._current_eta else "Not set"
-            return (f"Id: {self.id}\n"
-                    f"Locations: {location}\n"
-                    f"Truck: {truck.model if truck else 'None'}\n"  # type: ignore
-                    f"Weight: {weight:.2f}\n"
-                    f"Current Location: {self.current_location.name if self.current_location else 'None'}\n"
-                    f"Distance: {total_distance}\n"
-                    f"Departure time: {timedelta(seconds=departure_time_str)}\n" # type: ignore
-                    f"ETA: {timedelta(seconds=eta_str)}")  # type: ignore
+        location = [loc.name for loc in self.locations]
+        weight = sum([w.weight for w in self.packages])
+        total_distance = 0
+        for i in range(len(location) - 1):
+            total_distance += DISTANCE_TABLE[location[i]][location[i + 1]]  # Calculate total distance
+
+        truck = self.truck
+        departure_time_str = self._departure_time.strftime("%H:%M:%S") if self._departure_time else "Not set"
+        eta_str = self._current_eta.strftime("%H:%M:%S") if self._current_eta else "Not set"
+
+        return (f"Id: {self.id}\n"
+                f"Locations: {location}\n"
+                f"Truck: {truck.model if truck else 'None'}\n"  # type: ignore
+                f"Weight: {weight:.2f}\n"
+                f"Current Location: {self.current_location.name if self.current_location else 'None'}\n"
+                f"Distance: {total_distance}\n"
+                f"Departure time: {departure_time_str}\n"
+                f"ETA: {eta_str}")

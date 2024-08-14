@@ -15,5 +15,8 @@ class ViewRouteCommand(BaseCommand):
      
     def execute(self):
         result = self.app_data.view_routes()
-
-        return "There are currently no roads. You have to create roads first." if len(result) == 0 else result
+    
+        if result is None:
+            return "There are currently no roads. You have to create roads first."
+        else:
+            return result

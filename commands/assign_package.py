@@ -10,22 +10,17 @@ from core.application_data import ApplicationData
 
 
 class AssignPackageToRouteCommand(BaseCommand):
-    def __init__(self, params: list[str], app_data: ApplicationData):
-        super().__init__(params, app_data)
-
     def execute(self):
-        package_id = int(self.params[0])
+        package_id = str(self.params[0])
         route_id = int(self.params[1])
 
-        route = self.app_data.get_route_by_id(route_id)
-
-        if route is None:
-            return f"Error: Route with ID {route_id} not found."
-
-        package = self.app_data.get_package_by_id(package_id)  
-        if package is None:
+        package = self.app_data.get_package_by_id(package_id)
+        if not package:
             return f"Error: Package with ID {package_id} not found."
 
-        route.assign_package(package)
+        route = self.app_data.get_route_by_id(route_id)
+        if not route:
+            return f"Error: Route with ID {route_id} not found."
 
+        route.assign_package(package)
         return f"Package {package.id} assigned to route {route.id}."

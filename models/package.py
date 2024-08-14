@@ -36,9 +36,13 @@ class Package:
         self._customer_contact = customer_contact
         self.distance = get_distance(start_location, end_location)
         self.pack_status = PackageStatus.TOBEASSIGNED
+        self.expected_arrival_time = None
 
         Package.all_ids.add(id_pack)
         Package.customer_info[id_pack] = customer_contact
+
+    def set_expected_arrival_time(self, arrival_time):
+        self.expected_arrival_time = arrival_time
 
     @property
     def id(self):
