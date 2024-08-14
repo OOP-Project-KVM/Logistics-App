@@ -110,8 +110,9 @@ class ApplicationData:
         package = Package(id, start_location, end_location, weight, customer_contact)
         self._packages.append(package)
         
-    def create_route(self, id, locations):
+    def create_route(self, id, locations, departure_time:datetime):
             route = Route(id, locations)
+            route.departure_time = departure_time
             self._routes.append(route)
 
 
@@ -255,24 +256,28 @@ class ApplicationData:
         Calculate the ETA for a specific destination on a given route.
         """
         destination = destination.upper()
-        departure_time = datetime.now().date() + timedelta(days=1)
-        loc_time = datetime.combine(departure_time, time(6, 0))  # Start at 6 AM
+        
+        loc_time = route.departure_time
+
+        
+        if loc_time is None:
+            raise ValueError("Departure time for the route is not set.")
 
         location_names = [loc.name for loc in route.locations]
 
         if destination in location_names:
-            start_index = location_names.index(route.locations[0].name)
+            start_index = 0  # The route starts from the first location.
             end_index = location_names.index(destination)
-            
+        
             for i in range(start_index, end_index + 1):
                 loc_name = route.locations[i].name
-                
-                if i > start_index:  # Skip this for the first location since it's the departure point
+            
+                if i > start_index:  # Skip this for the first location since it's the departure point.
                     prev_loc_name = route.locations[i - 1].name
                     distance = DISTANCE_TABLE[prev_loc_name][loc_name]
-                    loc_time += timedelta(hours=distance / 87)  # Add travel time based on distance and speed
-                
+                    loc_time += timedelta(hours=distance / 87)  # Add travel time based on distance and speed.
+            
                 if loc_name == destination:
-                    return loc_time  # Return the ETA for the destination
+                    return loc_time  # Return the ETA for the destination.
 
-        return None  # Return None if the destination is not on the route
+        return None  # Return None if the destination is not on the route.

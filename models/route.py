@@ -16,8 +16,9 @@ class Route:
         self._packages: List[Package] = []
         self._current_location: Optional[Location] = None
         self._current_eta: Optional[datetime] = None
-        departure_date = datetime.now().date() + timedelta(days=1)  # Departure date is always the next day
-        self._departure_time: datetime = datetime.combine(departure_date, time(6, 0))
+        
+        self._departure_time = None
+
         self._current_load = 0.0  # Current load in kg
 
     @property
@@ -25,8 +26,10 @@ class Route:
         return self._departure_time
 
     @departure_time.setter
-    def departure_time(self, departure: datetime): 
+    def departure_time(self, departure: datetime):
         self._departure_time = departure
+
+
 
     @property
     def id(self) -> int:

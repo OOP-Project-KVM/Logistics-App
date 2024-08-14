@@ -10,7 +10,7 @@ class ViewPackageDetails(BaseCommand):
 
     def execute(self):
         package_id = int(self.params[0])
-        result = self.app_data.get_package_by_id(package_id)
+        result = self.app_data.get_package_by_id(package_id) #type: ignore
         if result:
             return f"Package found:\n{result}"
 

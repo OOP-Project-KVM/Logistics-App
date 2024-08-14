@@ -39,7 +39,7 @@ class AssignPackageToRouteCommand(BaseCommand):
             if eta_for_city is None:
                 return f"Error: Could not calculate ETA for {package.end_location} on route {route.id}."
             
-            package.expected_arrival_time = eta_for_city
+            package.expected_arrival_time = eta_for_city.strftime('%Y-%m-%d %H:%M') 
             route.assign_package(package)
             
             
