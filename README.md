@@ -41,9 +41,9 @@ The Logistics Application is designed to help manage and track the logistics of 
 
 To start the application, run:
 
-```bash
-python main.py
-```
+   ```bash
+   python main.py
+   ```
 
 ## Usage Instructions
 
@@ -106,9 +106,6 @@ The application includes error handling for scenarios such as attempting to assi
 
 If you wish to contribute to this project, feel free to submit pull requests or report issues. Your contributions are welcome!
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
