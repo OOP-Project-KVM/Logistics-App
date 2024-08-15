@@ -110,6 +110,6 @@ class Package:
                 f"To: {self.end_location}\n"
                 f"Distance: {self.distance}km\n"
                 f"Weight: {self.weight} kg\n"
-                f"Status:{self.pack_status}\n"
+                f"Status: {self.pack_status.value}\n"
                 f"Customer Contact: {self.customer_contact}")
 

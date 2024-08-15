@@ -9,11 +9,11 @@ class ViewPackageDetails(BaseCommand):
         super().__init__(params, app_data)
 
     def execute(self):
-        package_id = int(self.params[0])
-        result = self.app_data.get_package_by_id(package_id) #type: ignore
-        if result:
-            return f"Package found:\n{result}"
+        package_id = self.params[0]
+        package = self.app_data.get_package_by_id(package_id) 
+        if package:
+            return f"{package.__str__()}"
 
         else:
-            return f"package with ID {package_id} not found!"
+            return f"Package with ID {package_id} not found!"
 

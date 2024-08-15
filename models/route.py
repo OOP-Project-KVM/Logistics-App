@@ -4,7 +4,7 @@ from models.location import Location
 from models.package_status import PackageStatus
 from models.truck import Truck
 from models.package import Package, DISTANCE_TABLE
-from models.status import Status
+from models.truck_status import Status
 from datetime import datetime, timedelta,time
 
 
@@ -102,7 +102,7 @@ class Route:
             raise ValueError("Cannot assign package to a route with no truck assigned.")
         
         if not self.has_capacity(package.weight):
-            raise ValueError("Route cannot accept this package; capacity exceeded.")
+            raise ValueError("Route cannot accept this package: capacity exceeded.")
         
         if package.id in [p.id for p in self._packages]:
             raise ValueError("Package is already assigned to this route.")
@@ -110,6 +110,7 @@ class Route:
         package.pack_status = PackageStatus.OUTFORDELIVERY
         self._packages.append(package)
         self._current_load += package.weight
+
 
     def assign_truck(self, truck: Truck):
         if truck.is_free != Status.AVAILABLE:

@@ -9,7 +9,7 @@
 from commands.base_command import BaseCommand
 
 from core.application_data import ApplicationData
-from models.status import Status
+from models.truck_status import Status
 
 class AssignTruckToRouteCommand(BaseCommand):
     def __init__(self, params: list[str], app_data: ApplicationData):
@@ -28,5 +28,5 @@ class AssignTruckToRouteCommand(BaseCommand):
             return f"Error: Route with ID {route_id} not found."
 
         route.assign_truck(truck)
-        truck.set_truck_status(Status.BUSY)
+        truck.is_free = Status.BUSY
         return f"Truck {truck.id} assigned to route {route.id}."

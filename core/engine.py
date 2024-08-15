@@ -61,6 +61,9 @@ class Engine:
         print("5. View Routes")
         print("6. Search Route")
         print("7. Logout")
+        print("8. View Unassigned Packages")
+        print('9. View Available Trucks')
+        print('10. View Package Details')
         print("Enter 'end' to exit.\n")
 
     def handle_menu_selection(self, selection):
@@ -72,6 +75,9 @@ class Engine:
             '5': "viewroutes",
             '6': "searchroute",
             '7': "logoutuser",
+            '8': 'viewunassignedpackages',
+            '9': 'viewavailabletrucks',
+            '10': 'viewpackagedetails'
         }
 
         if selection in menu_options:
@@ -119,6 +125,10 @@ class Engine:
         elif command_name == "searchroute":
             params.append(input("Enter start location: "))
             params.append(input("Enter end location: "))
+        
+        elif command_name == 'viewpackagedetails':
+            params.append(input("Enter package ID: "))
+        
 
         command_input += ' ' + ' '.join(params)
 

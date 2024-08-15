@@ -9,6 +9,8 @@ from commands.create_route import CreateRouteCommand
 from commands.view_routes import ViewRouteCommand
 from commands.assign_truck_toRoute import AssignTruckToRouteCommand
 from commands.create_package import CreatePackageCommand
+from commands.view_unassignedPackages import ViewUnassignedPackagesCommand
+from commands.view_free_Trucks import ViewFreeTrucksCommand
 
 # CreatePackageCommand , ViewUnassignedPackagesCommand, CreateRouteCommand
 # SearchRouteCommand , AssignPackageToRouteCommand , ViewRoutesCommand 
@@ -42,4 +44,10 @@ class CommandFactory:
             return LogoutUserCommand(params, self._app_data)
         elif command.lower() == "searchroute":
             return SearchRouteCommand(params, self._app_data)
+        elif command.lower() == 'viewunassignedpackages':
+            return ViewUnassignedPackagesCommand(params, self._app_data)
+        elif command.lower() == 'viewavailabletrucks':
+            return ViewFreeTrucksCommand(params, self._app_data)
+        elif command.lower() == 'viewpackagedetails':
+            return ViewPackageDetails(params, self._app_data)
        
