@@ -22,8 +22,14 @@ class Route:
 
         self._current_load = 0.0  # Current load in kg
         self._status = RouteStatus.PENDING
+        self.arrival_time = None
 
-
+    @property
+    def arrival_time(self):
+        return self.arrival_time
+    @arrival_time.setter
+    def arrival_time(self, value):
+        self._arrival_time = value
     @property
     def status(self) -> RouteStatus:
         return self._status
@@ -136,20 +142,22 @@ class Route:
         self._current_eta = eta
 
     def check_and_unload_packages(self):
+
         if self._current_location is None or self._current_eta is None:
             return "Current location or ETA not set."
 
         delivered_packages = []
         current_time = datetime.now()
 
-        if current_time >= self._current_eta:
+        if current_time >= self._arrival_time:
             self.status = RouteStatus.COMPLETED
-            self.truck.is_free = Status.AVAILABLE # type: ignore
-            for package in self._packages:
-                if package.end_location == self._current_location.name:
-                    package.pack_status = PackageStatus.DELIVERED
-                    delivered_packages.append(package)
-            
+            self.truck.is_free = Status.AVAILABLE
+
+        for package in self._packages:
+            if package.end_location == self._current_location.name:
+                package.pack_status = PackageStatus.DELIVERED
+                delivered_packages.append(package)
+
             for package in delivered_packages:
                 self._packages.remove(package)
                 self._current_load -= package.weight

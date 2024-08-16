@@ -21,7 +21,7 @@ class CreateRouteCommand(BaseCommand):
     def execute(self):
         if self.app_data.has_logged_in_user.role == "Manager":  # type: ignore
             route_id = int(self.params[0])
-            location_names = self.params[1:]
+            location_names = [loc.upper() for loc in self.params[1:]]
 
             route = self.app_data.get_route_by_id(route_id)
             if route is not None:
