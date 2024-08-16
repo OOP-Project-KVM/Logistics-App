@@ -1,7 +1,12 @@
 # Logistics Application
 
 <img src="./logo.png" alt="Logo" width="200"/>
-![Logo]
+
+![Logo](./logo.jpg)
+
+Welcome to the Logistics App project!
+
+
 
 
 ## Overview
