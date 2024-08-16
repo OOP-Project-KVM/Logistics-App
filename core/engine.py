@@ -1,5 +1,7 @@
+import time
 from core.application_data import ApplicationData
 from core.command_factory import CommandFactory
+from time import sleep
 
 
 class Engine:
@@ -10,6 +12,7 @@ class Engine:
     def start(self):
         self.display_welcome_message()
         while True:
+            
             self.display_initial_options()
 
             read_input = input('Select an option (enter the number or "end" to quit): ').strip().lower()
@@ -133,5 +136,5 @@ class Engine:
         command_input += ' ' + ' '.join(params)
 
         command = self._command_factory.create(command_input)
-        result = command.execute()  # type: ignore
+        result = command.execute()  #type: ignore
         print(result)

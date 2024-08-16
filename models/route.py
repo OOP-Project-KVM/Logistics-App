@@ -5,7 +5,8 @@ from models.package_status import PackageStatus
 from models.truck import Truck
 from models.package import Package, DISTANCE_TABLE
 from models.truck_status import Status
-from datetime import datetime, timedelta,time
+from datetime import date, datetime, timedelta,time
+from models.route_status import RouteStatus
 
 
 class Route:
@@ -17,9 +18,19 @@ class Route:
         self._current_location: Optional[Location] = None
         self._current_eta: Optional[datetime] = None
         
-        self._departure_time = None
+        self._departure_time: Optional[datetime] = None
 
         self._current_load = 0.0  # Current load in kg
+        self._status = RouteStatus.PENDING
+
+
+    @property
+    def status(self) -> RouteStatus:
+        return self._status
+    
+    @status.setter
+    def status(self, status: RouteStatus):
+        self._status = status
 
     @property
     def departure_time(self) -> Optional[datetime]:
@@ -87,6 +98,8 @@ class Route:
     @property
     def current_load(self) -> float:
         return self._current_load
+    
+    
 
     def has_capacity(self, package_weight: float) -> bool:
         """
@@ -130,6 +143,8 @@ class Route:
         current_time = datetime.now()
 
         if current_time >= self._current_eta:
+            self.status = RouteStatus.COMPLETED
+            self.truck.is_free = Status.AVAILABLE # type: ignore
             for package in self._packages:
                 if package.end_location == self._current_location.name:
                     package.pack_status = PackageStatus.DELIVERED
@@ -144,22 +159,23 @@ class Route:
         else:
             return f"No packages delivered at {self._current_location.name}."
 
-    def __str__(self):
-        location = [loc.name for loc in self.locations]
-        weight = sum([w.weight for w in self.packages])
-        total_distance = 0
-        for i in range(len(location) - 1):
-            total_distance += DISTANCE_TABLE[location[i]][location[i + 1]]  # Calculate total distance
+    # def __str__(self):
+    #     location = [loc.name for loc in self.locations]
+    #     weight = sum([w.weight for w in self.packages])
+    #     total_distance = 0
+    #     for i in range(len(location) - 1):
+    #         total_distance += DISTANCE_TABLE[location[i]][location[i + 1]]  # Calculate total distance
 
-        truck = self.truck
-        departure_time_str = self._departure_time.strftime("%H:%M:%S") if self._departure_time else "Not set"
-        eta_str = self._current_eta.strftime("%H:%M:%S") if self._current_eta else "Not set"
+    #     truck = self.truck
+    #     departure_time_str = self._departure_time.strftime("%H:%M:%S") if self._departure_time else "Not set"
+    #     eta_str = self._current_eta.strftime("%H:%M:%S") if self._current_eta else "Not set"
 
-        return (f"Id: {self.id}\n"
-                f"Locations: {location}\n"
-                f"Truck: {truck.model if truck else 'None'}\n"  # type: ignore
-                f"Weight: {weight:.2f}\n"
-                f"Current Location: {self.current_location.name if self.current_location else 'None'}\n"
-                f"Distance: {total_distance}\n"
-                f"Departure time: {departure_time_str}\n"
-                f"ETA: {eta_str}")
+    #     return (f"Id: {self.id}\n"
+    #             f"Locations: {location}\n"
+    #             f"Truck: {truck.model if truck else 'None'}\n"  # type: ignore
+    #             f"Weight: {weight:.2f}\n"
+    #             f"Current Location: {self.current_location.name if self.current_location else 'None'}\n"
+    #             f"Distance: {total_distance}\n"
+    #             f"Departure time: {departure_time_str}\n"
+    #             f"ETA: {eta_str}\n"
+    #             f"Status: {self.status.value}")      

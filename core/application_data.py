@@ -8,10 +8,11 @@ from models.user import User
 from models.roles import Roles
 import os
 from datetime import datetime, timedelta,time
+from models.route_status import RouteStatus
 
 class ApplicationData:
 
-    DEPARTURE_TIME = datetime.strptime("06:00", "%H:%M").time()  # Fixed departure time at 6 AM
+    
     AVERAGE_SPEED = 87  # Average speed in km/h
 
     def __init__(self) -> None:
@@ -113,9 +114,12 @@ class ApplicationData:
     def create_route(self, id, locations, departure_time:datetime):
             route = Route(id, locations)
             route.departure_time = departure_time
+            route.status = RouteStatus.PENDING
             self._routes.append(route)
 
-
+    def get_routes_inProgress(self):
+        in_progress_routes = [route for route in self._routes if route.status == RouteStatus.INPROGRESS]
+        return in_progress_routes
 
     def update_route_assign_truck(self, route_id, truck_id):
         truck = next((t for t in self._trucks if t.id == truck_id), None)
@@ -130,6 +134,12 @@ class ApplicationData:
             raise ValueError(f'Route with ID {route_id} not found')
 
         route.assign_truck(truck)
+
+
+    def check_in_progress_routes(self):
+        route = next((r for r in self._routes))
+        if route.departure_time is not None and route.departure_time < datetime.now():
+            route.status = RouteStatus.INPROGRESS
 
         
         
@@ -154,10 +164,14 @@ class ApplicationData:
             output.append(f"Weight: {sum(pkg.weight for pkg in route.packages):.2f}")
             output.append(f"Distance: {self.calculate_total_distance(route)}")
             output.append(f"Departure time: {route.departure_time.strftime('%H:%M:%S') if route.departure_time else 'Not set'}")
+            output.append(f'Status: {route.status.value}')
         
             if route.packages:
                 for pkg in route.packages:
-                    eta = pkg.expected_arrival_time.strftime('%b %dth %H:%M') if pkg.expected_arrival_time else 'Not available'
+                    if isinstance(pkg.expected_arrival_time, str):
+                        pkg.expected_arrival_time = datetime.fromisoformat(pkg.expected_arrival_time)
+
+                    eta = pkg.expected_arrival_time.strftime('%b %dth %H:%M') if pkg.expected_arrival_time is not None else 'Not available'
                     output.append(f"Package ID: {pkg.id}, ETA: {eta}")
             else:
                 output.append("No packages assigned to this route.")

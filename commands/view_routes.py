@@ -7,6 +7,7 @@
 
 from commands.base_command import BaseCommand
 from core.application_data import ApplicationData
+from models.route import Route
 
 
 class ViewRouteCommand(BaseCommand):
@@ -14,6 +15,13 @@ class ViewRouteCommand(BaseCommand):
         super().__init__(params, app_data)
      
     def execute(self):
+        self.app_data.check_in_progress_routes()
+        routes = self.app_data.get_routes_inProgress()
+        
+        for route in routes:
+            route.check_and_unload_packages()
+
+
         result = self.app_data.view_routes()
     
         if len(result) == 0:
