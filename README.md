@@ -1,8 +1,6 @@
 # Logistics Application
 
-<img src="./logo.png" alt="Logo" width="200"/>
-
-![Logo](./logo.jpg)
+<img src="./logo.png" alt="Logo" width="100"/>
 
 Welcome to the Logistics App project!
 
