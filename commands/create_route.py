@@ -8,10 +8,7 @@
 # KALIN
 
 from commands.base_command import BaseCommand
-from models.route import Route
 from models.location import Location
-from core.application_data import ApplicationData
-from models.roles import Roles
 from datetime import datetime
 
 class CreateRouteCommand(BaseCommand):

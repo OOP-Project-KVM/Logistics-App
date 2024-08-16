@@ -23,13 +23,7 @@ class ApplicationData:
         self._logged_user = None
 
 
-    def calculate_arrival_time(self, departure_time: datetime, distance: int) -> datetime:
-        """
-        Calculate the expected arrival time based on the distance and a fixed speed of 87 km/h.
-        """
-        travel_time_hours = distance / 87  # Average speed 87 km/h
-        arrival_time = departure_time + timedelta(hours=travel_time_hours)
-        return arrival_time
+
 
 
     @property
