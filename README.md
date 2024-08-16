@@ -1,4 +1,11 @@
+<img src="./logo.png" alt= "logo" width="300px"
+style = "margin-top: 20px;"/>
 # Logistics Application
+
+Welcome to the Logistics App project!
+
+
+
 
 ## Overview
 
