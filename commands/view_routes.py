@@ -7,7 +7,7 @@
 
 from commands.base_command import BaseCommand
 from core.application_data import ApplicationData
-
+from models.roles import Roles
 
 
 class ViewRouteCommand(BaseCommand):
@@ -15,17 +15,18 @@ class ViewRouteCommand(BaseCommand):
         super().__init__(params, app_data)
      
     def execute(self):
-        self.app_data.check_in_progress_routes()
-        routes = self.app_data.get_routes_inProgress()
-        
-        for route in routes:
-            route.check_and_unload_packages()
+        if self.app_data.has_logged_in_user.role == Roles.MANAGER.value:  # type: ignore
+            self.app_data.check_in_progress_routes()  # Update route statuses
+            routes = self.app_data.get_routes_inProgress()
 
+            for route in routes:
+                self.app_data.check_and_unload_packages(route)  # Unload packages and update statuses
 
-        result = self.app_data.view_routes()
-    
-        if len(result) == 0:
-            return "There are currently no roads. You have to create roads first."
+            result = self.app_data.view_routes()
+
+            if len(result) == 0:
+                return "There are currently no roads. You have to create roads first."
+            else:
+                return result
         else:
-            return result
-        
+            return "You are not authorized to view routes."

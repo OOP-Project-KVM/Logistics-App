@@ -10,13 +10,14 @@
 from commands.base_command import BaseCommand
 from models.location import Location
 from datetime import datetime
+from models.roles import Roles
 
 class CreateRouteCommand(BaseCommand):
     def __init__(self, params: list[str], app_data):
         super().__init__(params, app_data)
 
     def execute(self):
-        if self.app_data.has_logged_in_user.role == "Manager":  # type: ignore
+        if self.app_data.has_logged_in_user.role == Roles.MANAGER.value :  # type: ignore
             route_id = int(self.params[0])
             location_names = [loc.upper() for loc in self.params[1:]]
 

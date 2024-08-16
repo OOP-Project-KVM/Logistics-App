@@ -1,15 +1,13 @@
-from math import log
-from re import escape
-from models import user
+
 from models.package import Package, DISTANCE_TABLE
 from models.route import Route
 from models.truck import Truck, Status
 from models.user import User
 from models.roles import Roles
 import os
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 from models.route_status import RouteStatus
-
+from models.package_status import PackageStatus
 
 class ApplicationData:
     AVERAGE_SPEED = 87  # Average speed in km/h
@@ -126,9 +124,10 @@ class ApplicationData:
         route.assign_truck(truck)
 
     def check_in_progress_routes(self):
-        route = next((r for r in self._routes))
-        if route.departure_time is not None and route.departure_time < datetime.now():
-            route.status = RouteStatus.INPROGRESS
+        for route in self._routes:
+            if route.departure_time and route.departure_time <= datetime.now() and route.status == RouteStatus.PENDING:
+                route.status = RouteStatus.INPROGRESS
+
 
     def update_route_assign_package(self, route_id, package_id):
         route = next((r for r in self._routes if r.id == route_id), None)
@@ -150,7 +149,7 @@ class ApplicationData:
             output.append(f"Locations: {[loc.name for loc in route.locations]}")
             output.append(f"Truck: {route.truck.model if route.truck else 'None'}")
             output.append(f"Weight: {sum(pkg.weight for pkg in route.packages):.2f}")
-            output.append(f"Distance: {self.calculate_total_distance(route)}")
+            output.append(f"Distance: {self.calculate_total_distance(route)}km")
             output.append(
                 f"Departure time: {route.departure_time.strftime('%H:%M:%S') if route.departure_time else 'Not set'}")
             output.append(f'Status: {route.status.value}')
@@ -287,3 +286,40 @@ class ApplicationData:
                     return loc_time  # Return the ETA for the destination.
 
         return None  # Return None if the destination is not on the route.
+
+
+    def check_and_unload_packages(self, route: Route):
+        """
+        Check if the route has reached the current location and unload packages if the ETA has passed.
+        Also, update the route status and truck availability.
+        """
+        if route.current_location is None or route.departure_time is None:
+            return "Current location or departure time not set."
+
+        delivered_packages = []
+        current_time = datetime.now()
+
+        # Check if the current time is past the ETA
+        if current_time >= route.departure_time + timedelta(hours=self.calculate_total_distance(route) / 87):
+            route.status = RouteStatus.COMPLETED
+            if route.truck:
+                route.truck.is_free = Status.AVAILABLE  # Mark the truck as available
+                route.truck = None  # type: ignore
+
+            # Unload packages at the final destination
+            for package in route.packages:
+                if package.end_location == route.locations[-1].name:  # Assuming the last location is the destination
+                    package.pack_status = PackageStatus.DELIVERED
+                    delivered_packages.append(package)
+
+            # Remove delivered packages from the route
+            for package in delivered_packages:
+                route.packages.remove(package)
+                route._current_load -= package.weight
+
+        if delivered_packages:
+            return f"Delivered packages at {route.locations[-1].name}: {[package.id for package in delivered_packages]}"
+        else:
+            return f"No packages delivered at {route.locations[-1].name}."
+
+

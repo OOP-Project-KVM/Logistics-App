@@ -141,49 +141,6 @@ class Route:
         self._current_location = location
         self._current_eta = eta
 
-    def check_and_unload_packages(self):
-
-        if self._current_location is None or self._current_eta is None:
-            return "Current location or ETA not set."
-
-        delivered_packages = []
-        current_time = datetime.now()
-
-        if current_time >= self._arrival_time:
-            self.status = RouteStatus.COMPLETED
-            self.truck.is_free = Status.AVAILABLE
-
-        for package in self._packages:
-            if package.end_location == self._current_location.name:
-                package.pack_status = PackageStatus.DELIVERED
-                delivered_packages.append(package)
-
-            for package in delivered_packages:
-                self._packages.remove(package)
-                self._current_load -= package.weight
+    
+   
         
-        if delivered_packages:
-            return f"Delivered packages at {self._current_location.name}: {[package.id for package in delivered_packages]}"
-        else:
-            return f"No packages delivered at {self._current_location.name}."
-
-    # def __str__(self):
-    #     location = [loc.name for loc in self.locations]
-    #     weight = sum([w.weight for w in self.packages])
-    #     total_distance = 0
-    #     for i in range(len(location) - 1):
-    #         total_distance += DISTANCE_TABLE[location[i]][location[i + 1]]  # Calculate total distance
-
-    #     truck = self.truck
-    #     departure_time_str = self._departure_time.strftime("%H:%M:%S") if self._departure_time else "Not set"
-    #     eta_str = self._current_eta.strftime("%H:%M:%S") if self._current_eta else "Not set"
-
-    #     return (f"Id: {self.id}\n"
-    #             f"Locations: {location}\n"
-    #             f"Truck: {truck.model if truck else 'None'}\n"  # type: ignore
-    #             f"Weight: {weight:.2f}\n"
-    #             f"Current Location: {self.current_location.name if self.current_location else 'None'}\n"
-    #             f"Distance: {total_distance}\n"
-    #             f"Departure time: {departure_time_str}\n"
-    #             f"ETA: {eta_str}\n"
-    #             f"Status: {self.status.value}")      
