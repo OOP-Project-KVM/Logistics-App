@@ -1,5 +1,5 @@
 # Logistics Application
-![Logo][./logo.png]
+![Logo](./logo.jpg)
 ## Overview
 
 The Logistics Application is designed to help manage and track the logistics of delivering packages via predefined routes. The system supports user registration, logging in as employees, managing routes, assigning trucks, and assigning packages to these routes. It calculates the expected arrival time of packages based on the departure time, distance, and average speed of the trucks.
