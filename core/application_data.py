@@ -148,10 +148,13 @@ class ApplicationData:
         for route in self._routes:
             output.append(f"\nId: {route.id}")
             output.append(f"Locations: {[loc.name for loc in route.locations]}")
-            output.append(f"Truck: {route.truck.model if route.truck else 'None'}")
+            if route.status == RouteStatus.COMPLETED:
+                output.append("Truck: Route completed, truck is going back to the warehouse.")
+            else:
+                output.append(f"Truck: {route.truck.model if route.truck else 'None'}")
             output.append(f"Weight: {sum(pkg.weight for pkg in route.packages):.2f}")
             output.append(f"Distance: {self.calculate_total_distance(route)}km")
-            output.append(f'eta:{route.arrival_time}')
+            output.append(f'ETA: {route.arrival_time.strftime("%b %dth %H:%M") if route.arrival_time else "Not available"}')
             output.append(
                 f"Departure time: {route.departure_time.strftime('%H:%M:%S') if route.departure_time else 'Not set'}")
             output.append(f'Status: {route.status.value}')

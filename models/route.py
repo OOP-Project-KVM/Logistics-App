@@ -171,15 +171,16 @@ class Route:
         """
         if self._departure_time is None:
             return "Departure time not set."
-
+        self.calculate_eta_for_all_locations()
         current_time = datetime.now()
         delivered_packages = []
 
         for i in range(len(self._locations)):
             loc_name = self._locations[i].name
             loc_eta = self._arrival_times.get(loc_name)
+            
 
-            if loc_eta and current_time >= loc_eta:
+            if current_time >= loc_eta: #type: ignore
                 # Unload packages at the current location
                 for package in self._packages:
                     if loc_name == package.end_location:

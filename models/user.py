@@ -11,7 +11,7 @@ class User:
         self.contact = contact
 
     def role_validator(self, role):
-        if role not in [Roles.MANAGER, Roles.WORKER]:
+        if role not in [Roles.MANAGER.value, Roles.WORKER.value]:
             raise ValueError("non existent role")
         return role
 
