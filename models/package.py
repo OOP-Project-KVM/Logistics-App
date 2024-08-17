@@ -1,7 +1,7 @@
 from models.package_status import PackageStatus
 LOCATIONS = ["SYD", "MEL", "ADL", "ASP", "BRI", "DAR", "PER"]
 DISTANCE_TABLE = {
-    "SYD": {"MEL": 1, "ADL": 1376, "ASP": 2762, "BRI": 909, "DAR": 3935, "PER": 4016},  # 877
+    "SYD": {"MEL": 877, "ADL": 1376, "ASP": 2762, "BRI": 909, "DAR": 3935, "PER": 4016},  # 877
     "MEL": {"SYD": 877, "ADL": 725, "ASP": 2255, "BRI": 1765, "DAR": 3752, "PER": 3509},
     "ADL": {"SYD": 1376, "MEL": 725, "ASP": 1530, "BRI": 1927, "DAR": 3027, "PER": 2785},
     "ASP": {"SYD": 2762, "MEL": 2255, "ADL": 1530, "BRI": 2993, "DAR": 1497, "PER": 2481},

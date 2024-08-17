@@ -8,7 +8,7 @@ def main():
     app_data.initalize_trucks()  # Assuming this initializes some truck data
     
     # Load employees from the file
-    app_data.load_employees_from_file('models/Employees.txt')
+    # app_data.load_employees_from_file('models/Employees.txt')
     
     # Create the command factory with the application data
     cmd_factory = CommandFactory(app_data)

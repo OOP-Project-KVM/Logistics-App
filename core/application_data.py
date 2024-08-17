@@ -150,6 +150,7 @@ class ApplicationData:
             output.append(f"Truck: {route.truck.model if route.truck else 'None'}")
             output.append(f"Weight: {sum(pkg.weight for pkg in route.packages):.2f}")
             output.append(f"Distance: {self.calculate_total_distance(route)}km")
+            output.append(f'eta:{route.arrival_time}')
             output.append(
                 f"Departure time: {route.departure_time.strftime('%H:%M:%S') if route.departure_time else 'Not set'}")
             output.append(f'Status: {route.status.value}')
@@ -300,22 +301,22 @@ class ApplicationData:
         current_time = datetime.now()
 
         # Check if the current time is past the ETA
-        if current_time >= route.departure_time + timedelta(hours=self.calculate_total_distance(route) / 87):
+        if datetime.now() >= route.arrival_time:
             route.status = RouteStatus.COMPLETED
             if route.truck:
                 route.truck.is_free = Status.AVAILABLE  # Mark the truck as available
                 route.truck = None  # type: ignore
 
             # Unload packages at the final destination
-            for package in route.packages:
-                if package.end_location == route.locations[-1].name:  # Assuming the last location is the destination
-                    package.pack_status = PackageStatus.DELIVERED
-                    delivered_packages.append(package)
+        for package in route.packages:
+            if package.end_location == route.locations[-1].name:  # Assuming the last location is the destination
+                package.pack_status = PackageStatus.DELIVERED
+                delivered_packages.append(package)
 
             # Remove delivered packages from the route
-            for package in delivered_packages:
-                route.packages.remove(package)
-                route._current_load -= package.weight
+        for package in delivered_packages:
+            route.packages.remove(package)
+            route._current_load -= package.weight
 
         if delivered_packages:
             return f"Delivered packages at {route.locations[-1].name}: {[package.id for package in delivered_packages]}"

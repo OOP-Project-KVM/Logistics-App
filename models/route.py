@@ -26,7 +26,7 @@ class Route:
 
     @property
     def arrival_time(self):
-        return self.arrival_time
+        return self._arrival_time
     @arrival_time.setter
     def arrival_time(self, value):
         self._arrival_time = value
