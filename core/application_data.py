@@ -151,6 +151,7 @@ class ApplicationData:
             output.append(f"Truck: {route.truck.model if route.truck else 'None'}")
             output.append(f"Weight: {sum(pkg.weight for pkg in route.packages):.2f}")
             output.append(f"Distance: {self.calculate_total_distance(route)}km")
+            output.append(f'eta:{route.arrival_time}')
             output.append(
                 f"Departure time: {route.departure_time.strftime('%H:%M:%S') if route.departure_time else 'Not set'}")
             output.append(f'Status: {route.status.value}')

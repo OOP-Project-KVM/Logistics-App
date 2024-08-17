@@ -12,8 +12,7 @@ class User:
 
     def role_validator(self, role):
         if role not in [Roles.MANAGER, Roles.WORKER]:
-            pass
-            # raise ValueError("non existent role")
+            raise ValueError("non existent role")
         return role
 
     def validate_first_name(self, first_name):
