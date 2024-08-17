@@ -1,4 +1,7 @@
 from models.package_status import PackageStatus
+from commands.validation_helpers import (validate_location, validate_weight,
+                                         validate_customer_contact, validate_locations)
+
 LOCATIONS = ["SYD", "MEL", "ADL", "ASP", "BRI", "DAR", "PER"]
 DISTANCE_TABLE = {
     "SYD": {"MEL": 1.5, "ADL": 1376, "ASP": 2762, "BRI": 909, "DAR": 3935, "PER": 4016},  # 877
@@ -22,18 +25,13 @@ class Package:
     customer_info = {}
 
     def __init__(self, id_pack, start_location: str, end_location: str, weight: float, customer_contact: str):
-        self.validate_id(id_pack)
-        self.validate_location(start_location)
-        self.validate_location(end_location)
-        self.validate_weight(weight)
-        self.validate_customer_contact(customer_contact)
-        self.validate_locations(start_location, end_location)
 
-        self._id = id_pack
-        self._start_location = start_location
-        self._end_location = end_location
-        self._weight = weight
-        self._customer_contact = customer_contact
+        self._id = self.validate_id(id_pack)
+        self._start_location = validate_location(start_location)
+        self._end_location = validate_location(end_location)
+        validate_locations(start_location, end_location)
+        self._weight = validate_weight(weight)
+        self._customer_contact = validate_customer_contact(customer_contact)
         self.distance = get_distance(start_location, end_location)
         self.pack_status = PackageStatus.TOBEASSIGNED
         self.expected_arrival_time = None
@@ -49,14 +47,21 @@ class Package:
     def id(self):
         return self._id
 
+    def validate_id(self, id_pack):
+        if not id_pack:
+            raise ValueError("You must provide ID")
+        if id_pack in Package.all_ids:
+            raise ValueError(f"Shipment ID {id_pack} already exists.")
+        return id_pack
+
     @property
     def start_location(self):
         return self._start_location
 
     @start_location.setter
     def start_location(self, value):
-        self.validate_location(value)
-        self.validate_locations(self._end_location, value)
+        validate_location(value)
+        validate_locations(self._end_location, value)
         self._start_location = value
 
     @property
@@ -65,8 +70,8 @@ class Package:
 
     @end_location.setter
     def end_location(self, value):
-        self.validate_location(value)
-        self.validate_locations(self._start_location, value)
+        validate_location(value)
+        validate_locations(self._start_location, value)
         self._end_location = value
 
     @property
@@ -79,30 +84,8 @@ class Package:
 
     @customer_contact.setter
     def customer_contact(self, value):
-        self.validate_customer_contact(value)
+        validate_customer_contact(value)
         self._customer_contact = value
-
-    def validate_id(self, id_pack):
-        if not id_pack:
-            raise ValueError("You must provide ID")
-        if id_pack in Package.all_ids:
-            raise ValueError(f"Shipment ID {id_pack} already exists.")
-
-    def validate_location(self, location):
-        if location[:3].upper() not in LOCATIONS:
-            raise ValueError("We don't provide services at this location.")
-
-    def validate_weight(self, weight):
-        if not isinstance(weight, (int, float)) or weight <= 0:
-            raise ValueError("Weight must be a positive number.")
-
-    def validate_customer_contact(self, customer_contact):
-        if not 5 <= len(customer_contact) <= 20:
-            raise ValueError("Customer contact info  must be between 5 and 20 characters!")
-
-    def validate_locations(self, start_location, end_location):
-        if start_location.upper() == end_location.upper():
-            raise ValueError("The start and end address must be in different locations.")
 
     def __str__(self):
         return (f"Package Details:\n"

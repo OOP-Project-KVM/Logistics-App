@@ -1,15 +1,14 @@
 
 # from datetime import datetime
 
-from models.package import LOCATIONS
-
+# from models.package import LOCATIONS
+from commands.validation_helpers import validate_location
 
 class Location:
     # DATE_FORMAT = "%d-%m-%Y %H:%M:%S"
 
     def __init__(self, name: str):
-        self.validate_name(name)
-        self._name = name
+        self._name = validate_location(name)
         # self._arrival_time = self.parse_datetime(arrival_time_str) if arrival_time_str else None
         # self._departure_time = self.parse_datetime(departure_time_str) if departure_time_str else None
         # self.validate_times(self._arrival_time, self._departure_time)
@@ -26,10 +25,10 @@ class Location:
     # def departure_time(self):
     #     return self._departure_time
 
-    @staticmethod
-    def validate_name(name):
-        if name[:3].upper() not in LOCATIONS:
-            raise ValueError("We don't provide services there.")
+    # @staticmethod
+    # def validate_name(name):
+    #     if name[:3].upper() not in LOCATIONS:
+    #         raise ValueError("We don't provide services there.")
 
     # @staticmethod
     # def parse_datetime(datetime_str: str) -> datetime:
