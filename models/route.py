@@ -1,3 +1,4 @@
+import re
 from typing import List, Optional
 from models import package
 from models.location import Location
@@ -22,14 +23,16 @@ class Route:
 
         self._current_load = 0.0  # Current load in kg
         self._status = RouteStatus.PENDING
-        self.arrival_time = None
+        self._arrival_times: dict[str, datetime] = {}
 
     @property
     def arrival_time(self):
-        return self.arrival_time
+        return self._arrival_time
+    
     @arrival_time.setter
-    def arrival_time(self, value):
-        self._arrival_time = value
+    def arrival_time(self, arrival_time):
+        self._arrival_time = arrival_time
+
     @property
     def status(self) -> RouteStatus:
         return self._status
@@ -137,10 +140,68 @@ class Route:
         self._truck = truck
         self._current_load = 0.0  # Reset load since we're assigning a new truck
 
-    def update_current_location(self, location: Location, eta: datetime):
-        self._current_location = location
-        self._current_eta = eta
-
     
    
-        
+    def calculate_eta_for_all_locations(self):
+        """
+        Calculate the ETA for each location on the route and store it in the _arrival_times dictionary.
+        """
+        if self._departure_time is None:
+            raise ValueError("Departure time not set.")
+
+        loc_time = self._departure_time
+
+        for i in range(len(self._locations)):
+            loc_name = self._locations[i].name
+
+            if i > 0:  # Skip this for the first location since it's the departure point.
+                prev_loc_name = self._locations[i - 1].name
+                distance = DISTANCE_TABLE[prev_loc_name][loc_name]
+                loc_time += timedelta(hours=distance / 87)  # Assuming 87 km/h average speed
+
+            # Store the arrival time for each location in the dictionary
+            self._arrival_times[loc_name] = loc_time
+
+        # Return the arrival time for the final destination
+        return loc_time
+    
+    def check_and_unload_packages(self):
+        """
+        Check if the route has reached the current location and unload packages if the ETA has passed.
+        Also, update the route status and truck availability.
+        """
+        if self._departure_time is None:
+            return "Departure time not set."
+
+        current_time = datetime.now()
+        delivered_packages = []
+
+        for i in range(len(self._locations)):
+            loc_name = self._locations[i].name
+            loc_eta = self._arrival_times.get(loc_name)
+
+            if loc_eta and current_time >= loc_eta:
+                # Unload packages at the current location
+                for package in self._packages:
+                    if loc_name == package.end_location:
+                        package.pack_status = PackageStatus.DELIVERED
+                        delivered_packages.append(package)
+
+                # Remove delivered packages from the route
+                for package in delivered_packages:
+                    self._packages.remove(package)
+                    self._current_load -= package.weight
+
+                if delivered_packages:
+                    print(f"Delivered packages at {loc_name}: {[package.id for package in delivered_packages]}")
+
+            # If the route has reached the final destination
+            if i == len(self._locations) - 1:
+                self.status = RouteStatus.COMPLETED
+                if self._truck:
+                    self._truck.is_free = Status.AVAILABLE  # Mark the truck as available
+                    self._truck = None  # Unassign the truck since the route is complete
+                return f"Route completed. Delivered packages at final destination: {loc_name}"
+
+        return f"Route {self._id} is in progress."
+

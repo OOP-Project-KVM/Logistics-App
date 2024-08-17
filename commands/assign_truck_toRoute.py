@@ -27,6 +27,6 @@ class AssignTruckToRouteCommand(BaseCommand):
         if route is None:
             return f"Error: Route with ID {route_id} not found."
 
-        route.assign_truck(truck)
+        route.assign_truck(truck) 
         truck.is_free = Status.BUSY
         return f"Truck {truck.id} assigned to route {route.id}."

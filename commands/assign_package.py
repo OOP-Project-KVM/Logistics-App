@@ -6,8 +6,10 @@
 
 # VIKTOR
 
+from re import S
 from commands.base_command import BaseCommand
 from core.application_data import ApplicationData
+from models.route_status import RouteStatus
 
 
 class AssignPackageToRouteCommand(BaseCommand):
@@ -36,6 +38,9 @@ class AssignPackageToRouteCommand(BaseCommand):
 
             if eta_for_city is None:
                 return f"Error: Could not calculate ETA for {package.end_location} on route {route.id}."
+            
+            if route.status != RouteStatus.PENDING:
+                return f"Error: You can't assign a package to a route that is In Progress or Completed  ."
             
             package.expected_arrival_time = eta_for_city.strftime('%Y-%m-%d %H:%M') 
             route.assign_package(package)

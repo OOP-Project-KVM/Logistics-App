@@ -16,11 +16,10 @@ class ViewRouteCommand(BaseCommand):
      
     def execute(self):
         if self.app_data.has_logged_in_user.role == Roles.MANAGER.value:  # type: ignore
-            self.app_data.check_in_progress_routes()  # Update route statuses
             routes = self.app_data.get_routes_inProgress()
-
+            self.app_data.check_in_progress_routes()
             for route in routes:
-                self.app_data.check_and_unload_packages(route)  # Unload packages and update statuses
+                route.check_and_unload_packages()
 
             result = self.app_data.view_routes()
 
