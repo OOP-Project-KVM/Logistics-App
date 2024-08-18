@@ -16,9 +16,9 @@ class LoginUserCommand(BaseCommand):
         
         
         user = self._app_data.find_user_by_username(username)
-        if user.password != password: 
+        if user.password != password:  #type: ignore
             return f"Wrong username or password!"
         else:
             self._app_data.login(user)
 
-            return f'User {user.username} successfully logged in!'  
+            return f'User {user.username} successfully logged in!'   #type: ignore

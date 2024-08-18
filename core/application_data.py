@@ -148,7 +148,7 @@ class ApplicationData:
         for route in self._routes:
             output.append(f"\nId: {route.id}")
             output.append(f"Locations: {[loc.name for loc in route.locations]}")
-            if route.status == RouteStatus.COMPLETED:
+            if route.status == RouteStatus.COMPLETED.value:
                 output.append("Truck: Route completed, truck is going back to the warehouse.")
             else:
                 output.append(f"Truck: {route.truck.model if route.truck else 'None'}")

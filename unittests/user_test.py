@@ -10,8 +10,8 @@ class TestUser(unittest.TestCase):
         self.valid_first_name = "John"
         self.valid_last_name = "Doe"
         self.valid_password = "secureP@ssw0rd"
-        self.valid_role = Roles.MANAGER
-        self.valid_contact = "1234567890"
+        self.valid_role = Roles.MANAGER.value
+        self.valid_contact = "johndoe@gmail.com"
 
     def test_create_valid_user(self):
         user = User(

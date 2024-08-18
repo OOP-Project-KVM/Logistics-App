@@ -16,7 +16,7 @@ class TestLocation(unittest.TestCase):
     def test_invalid_location_name(self):
         with self.assertRaises(ValueError) as context:
             Location(self.invalid_location_name)
-        self.assertEqual(str(context.exception), "We don't provide services there.")
+        self.assertEqual(str(context.exception), "We don't provide services at this location.")
 
     def test_str_representation(self):
         location = Location(self.valid_location_name)

@@ -1,12 +1,11 @@
-import re
+
 from typing import List, Optional
-from models import package
 from models.location import Location
 from models.package_status import PackageStatus
 from models.truck import Truck
 from models.package import Package, DISTANCE_TABLE
 from models.truck_status import Status
-from datetime import date, datetime, timedelta,time
+from datetime import datetime, timedelta
 from models.route_status import RouteStatus
 
 
@@ -24,6 +23,15 @@ class Route:
         self._current_load = 0.0  # Current load in kg
         self._status = RouteStatus.PENDING
         self._arrival_times: dict[str, datetime] = {}
+        self._arrival_time = None
+
+    @property
+    def current_location(self) -> Optional[Location]:
+        return self._current_location
+    
+    @current_location.setter
+    def current_location(self, location: Location):
+        self._current_location = location
 
     @property
     def arrival_time(self):
@@ -78,14 +86,7 @@ class Route:
     def packages(self, packages: List[Package]):
         self._packages = packages
 
-    @property
-    def current_location(self) -> Optional[Location]:
-        return self._current_location
-
-    @current_location.setter
-    def current_location(self, location: Location):
-        self._current_location = location
-
+    
     @property
     def current_eta(self) -> Optional[datetime]:
         return self._current_eta
@@ -205,3 +206,4 @@ class Route:
 
         return f"Route {self._id} is in progress."
 
+    

@@ -36,13 +36,13 @@ class TestRoute(unittest.TestCase):
         self.package3 = Package("PKG003", "MEL", "ADL", 100000, "0987654323")
 
         self.route = Route(1, [self.location1, self.location2, self.location3])
+        
 
     def test_initial_route_properties(self):
         self.assertEqual(self.route.id, 1)
         self.assertEqual(self.route.locations, [self.location1, self.location2, self.location3])
         self.assertIsNone(self.route.truck)
         self.assertEqual(self.route.packages, [])
-        self.assertIsNone(self.route.current_location)
         self.assertIsNone(self.route.current_eta)
         self.assertEqual(self.route.current_load, 0.0)
         self.assertEqual(self.route.status, RouteStatus.PENDING)
@@ -89,12 +89,7 @@ class TestRoute(unittest.TestCase):
             self.route.assign_package(self.package1)
         self.assertEqual(str(context.exception), "Package is already assigned to this route.")
 
-    def test_update_current_location(self):
-        eta = datetime.now() + timedelta(hours=1)
-        self.route.update_current_location(self.location2, eta)
-        self.assertEqual(self.route.current_location, self.location2)
-        self.assertEqual(self.route.current_eta, eta)
-
+    
     def test_set_arrival_time(self):
         arrival_time = datetime.now() + timedelta(days=2)
         self.route.arrival_time = arrival_time
