@@ -213,3 +213,7 @@ class Route:
             if current_time >= time:
                 self.current_location = Location(loc)
         return self.current_location
+
+    def route_info(self):
+        self.calculate_eta_for_all_locations()
+        return f'{[(k,v) for k,v in self._arrival_times.items()]}'

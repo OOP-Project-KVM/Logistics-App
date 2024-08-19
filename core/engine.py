@@ -1,7 +1,7 @@
-import time
+
 from core.application_data import ApplicationData
 from core.command_factory import CommandFactory
-from time import sleep
+
 
 
 class Engine:
@@ -11,12 +11,14 @@ class Engine:
 
     def start(self):
         self.display_welcome_message()
+        self.app_data.load_state()
         while True:
             
             self.display_initial_options()
 
             read_input = input('Select an option (enter the number or "end" to quit): ').strip().lower()
             if read_input == 'end':
+                self.app_data.save_state()
                 print("Exiting the application. Goodbye!")
                 break
 

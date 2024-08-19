@@ -7,6 +7,7 @@ import os
 from datetime import datetime, timedelta
 from models.route_status import RouteStatus
 from models.package_status import PackageStatus
+import pickle
 
 
 class ApplicationData:
@@ -154,17 +155,8 @@ class ApplicationData:
             output.append(
                 f"Departure time: {route.departure_time.strftime('%H:%M:%S') if route.departure_time else 'Not set'}")
             output.append(f'Status: {route.status.value}')
-            try:
-                idx = route.locations.index(route.current_location) #type: ignore
-            except ValueError:
-                idx = 0  # or some other appropriate value or action
-
-            # idx = route.locations.index(route.current_location.name)
-            if len(route.locations) <= idx:
-                output.append("Next stop: We are at the last stop")
-
-            next_location = route.locations[idx + 1].name
-            output.append(f"Next Stop: {next_location}")
+            
+            output.append(f'Route Info: {self.search_route(route.locations[0].name, route.locations[-1].name)}')
 
             if route.packages:
                 for pkg in route.packages:
@@ -290,3 +282,21 @@ class ApplicationData:
                     return loc_time  # Return the ETA for the destination.
 
         return None  # Return None if the destination is not on the route.
+
+    def save_state(self):
+        data = {'routes': self._routes, 'packages': self._packages, 'trucks': self._trucks, 'users': self._users}
+        file_path = 'data/app_data.pickle'
+        if not os.path.exists(os.path.dirname(file_path)):
+            os.mkdir(os.path.dirname(file_path))
+        with open(file_path, 'wb') as file:
+            pickle.dump(data, file)
+
+    def load_state(self):
+        file_path = 'data/app_data.pickle'
+        if os.path.isfile(file_path):
+            with open(file_path, 'rb') as file:
+                data = pickle.load(file)
+                self._routes = data['routes']
+                self._packages = data['packages']
+                self._trucks = data['trucks']
+                self._users = data['users']
