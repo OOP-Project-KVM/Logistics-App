@@ -39,18 +39,18 @@ The Logistics Application is designed to help manage and track the logistics of 
 
 1. **Clone the Repository:**
 
-   ```bash
-   git clone https://github.com/your-username/logistics-application.git
-   cd logistics-application
-   ```
+    ```bash
+    git clone https://github.com/your-username/logistics-application.git
+    cd logistics-application
+    ```
    
-## 2. Run the Application:
+## Run the Application:
 
-To start the application, run:
+1. **To start the application, run:**
 
-   ```bash
-   python main.py
-   ```
+    ```bash
+    python main.py
+    ```
 
 ## Usage Instructions
 
