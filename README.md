@@ -1,4 +1,4 @@
-<img src="logo.jpg" alt= "logo" width="100px"
+<img src="./logo.png" alt= "logo" width="300px"
 style = "margin-top: 20px;"/>
 # Logistics Application
 

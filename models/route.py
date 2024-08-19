@@ -206,4 +206,11 @@ class Route:
 
         return f"Route {self._id} is in progress."
 
-    
+    def update_current_location(self):
+        self.calculate_eta_for_all_locations()
+
+        current_time = datetime.now()
+        for loc, time in self._arrival_times.items():
+            if current_time >= time:
+                self.current_location = loc
+        return self.current_location

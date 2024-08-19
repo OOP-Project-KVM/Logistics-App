@@ -20,7 +20,7 @@ class ViewRouteCommand(BaseCommand):
             self.app_data.check_in_progress_routes()
             for route in routes:
                 route.check_and_unload_packages()
-
+                route.update_current_location()
             result = self.app_data.view_routes()
 
             if len(result) == 0:
