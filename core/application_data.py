@@ -160,7 +160,7 @@ class ApplicationData:
             output.append(f'Status: {route.status.value}')
 
             if route.current_location:
-                idx = route.locations.index(route.current_location)
+                idx = next((i for i, loc in enumerate(route.locations) if loc.name == route.current_location.name))
                 if len(route.locations) <= idx:
                     output.append("Next stop: We are at the last stop")
 
