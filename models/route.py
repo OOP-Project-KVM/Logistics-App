@@ -15,7 +15,7 @@ class Route:
         self._locations = locations
         self._truck: Optional[Truck] = None
         self._packages: List[Package] = []
-        self._current_location: Optional[Location] = None
+        self._current_location = locations[0] 
         self._current_eta: Optional[datetime] = None
         
         self._departure_time: Optional[datetime] = None
@@ -206,4 +206,10 @@ class Route:
 
         return f"Route {self._id} is in progress."
 
-    
+    def update_current_location(self):
+        self.calculate_eta_for_all_locations()
+        current_time = datetime.now()
+        for loc, time in self._arrival_times.items():
+            if current_time >= time:
+                self.current_location = Location(loc)
+        return self.current_location

@@ -1,4 +1,3 @@
-
 from models.package import Package, DISTANCE_TABLE
 from models.route import Route
 from models.truck import Truck, Status
@@ -9,6 +8,7 @@ from datetime import datetime, timedelta
 from models.route_status import RouteStatus
 from models.package_status import PackageStatus
 
+
 class ApplicationData:
     AVERAGE_SPEED = 87  # Average speed in km/h
 
@@ -18,9 +18,6 @@ class ApplicationData:
         self._trucks: list[Truck] = []
         self._users: list[User] = []
         self._logged_user = None
-
-
-
 
     @property
     def logged_in_user(self):
@@ -77,7 +74,7 @@ class ApplicationData:
         self._trucks.extend([Truck(id, 'MAN', 37000, 10000) for id in range(1011, 1026)])
         self._trucks.extend([Truck(id, 'Actros', 26000, 13000) for id in range(1026, 1041)])
 
-    def load_employees_from_file(self, file_path):
+    def load_employees_from_file(self):
         file_path = 'models/employees.txt'
         if not os.path.exists(file_path):
             print(f"File {file_path} does not exist.")
@@ -104,7 +101,6 @@ class ApplicationData:
         route.departure_time = departure_time
         route.status = RouteStatus.PENDING
         self._routes.append(route)
-        
 
     def get_routes_inProgress(self):
         in_progress_routes = [route for route in self._routes if route.status == RouteStatus.INPROGRESS]
@@ -128,7 +124,6 @@ class ApplicationData:
         for route in self._routes:
             if route.departure_time and route.departure_time <= datetime.now() and route.status == RouteStatus.PENDING:
                 route.status = RouteStatus.INPROGRESS
-
 
     def update_route_assign_package(self, route_id, package_id):
         route = next((r for r in self._routes if r.id == route_id), None)
@@ -154,18 +149,22 @@ class ApplicationData:
                 output.append(f"Truck: {route.truck.model if route.truck else 'None'}")
             output.append(f"Weight: {sum(pkg.weight for pkg in route.packages):.2f}")
             output.append(f"Distance: {self.calculate_total_distance(route)}km")
-            output.append(f'ETA: {route.arrival_time.strftime("%b %dth %H:%M") if route.arrival_time else "Not available"}')
+            output.append(
+                f'ETA: {route.arrival_time.strftime("%b %dth %H:%M") if route.arrival_time else "Not available"}')
             output.append(
                 f"Departure time: {route.departure_time.strftime('%H:%M:%S') if route.departure_time else 'Not set'}")
             output.append(f'Status: {route.status.value}')
+            try:
+                idx = route.locations.index(route.current_location) #type: ignore
+            except ValueError:
+                idx = 0  # or some other appropriate value or action
 
-            if route.current_location:
-                idx = next((i for i, loc in enumerate(route.locations) if loc.name == route.current_location.name))
-                if len(route.locations) <= idx:
-                    output.append("Next stop: We are at the last stop")
+            # idx = route.locations.index(route.current_location.name)
+            if len(route.locations) <= idx:
+                output.append("Next stop: We are at the last stop")
 
-                next_location = route.locations[idx + 1].name
-                output.append(f"Next Stop: {next_location}")
+            next_location = route.locations[idx + 1].name
+            output.append(f"Next Stop: {next_location}")
 
             if route.packages:
                 for pkg in route.packages:
@@ -261,11 +260,11 @@ class ApplicationData:
             print(f"No routes found from {start_location} to {end_location}.")
         return ''
 
-    def calculate_eta_for_route(self, route: Route, destination: str):
+    def calculate_eta_for_route(self, route: Route):
         """
         Calculate the ETA for a specific destination on a given route.
         """
-        destination = destination.upper()
+        destination = route.locations[-1].name
 
         loc_time = route.departure_time
 
@@ -291,6 +290,3 @@ class ApplicationData:
                     return loc_time  # Return the ETA for the destination.
 
         return None  # Return None if the destination is not on the route.
-
-
-

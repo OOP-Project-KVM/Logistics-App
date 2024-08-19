@@ -34,7 +34,7 @@ class AssignPackageToRouteCommand(BaseCommand):
             if route is None:
                 return f"Route with ID {route_id} not found."
             
-            eta_for_city = self.app_data.calculate_eta_for_route(route,package.end_location)
+            eta_for_city = self.app_data.calculate_eta_for_route(route)
 
             if eta_for_city is None:
                 return f"Error: Could not calculate ETA for {package.end_location} on route {route.id}."

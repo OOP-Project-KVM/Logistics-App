@@ -14,8 +14,8 @@ class TestPackage(unittest.TestCase):
 
 
         self.valid_id = "PKG001"
-        self.valid_start = "SYD"
-        self.valid_end = "MEL"
+        self.valid_start = "MEL"
+        self.valid_end = "SYD"
         self.valid_weight = 10.5
         self.valid_contact = "1234567890"
         self.package = Package(
@@ -68,7 +68,7 @@ class TestPackage(unittest.TestCase):
         self.assertEqual(str(context.exception), "Weight must be a positive number.")
 
         with self.assertRaises(ValueError) as context:
-            Package(self.valid_id, self.valid_start, self.valid_end, "Tejka Pratka", self.valid_contact)
+            Package(self.valid_id, self.valid_start, self.valid_end, -1, self.valid_contact)
         self.assertEqual(str(context.exception), "Weight must be a positive number.")
 
     def test_invalid_customer_contact(self):
