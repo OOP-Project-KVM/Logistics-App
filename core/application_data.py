@@ -2,11 +2,11 @@ from models.package import Package, DISTANCE_TABLE
 from models.route import Route
 from models.truck import Truck, Status
 from models.user import User
-from models.roles import Roles
+from models.status.roles import Roles
 import os
 from datetime import datetime, timedelta
-from models.route_status import RouteStatus
-from models.package_status import PackageStatus
+from models.status.route_status import RouteStatus
+from models.status.package_status import PackageStatus
 import pickle
 
 
@@ -138,13 +138,28 @@ class ApplicationData:
         if package is not None:
             route.assign_package(package)
 
+    def calculate_package_eta(self, route, package):
+        """
+        Calculate the ETA for a specific package based on its drop-off location.
+        """
+        # Use the package's end_location as the drop-off location
+        dropoff_location = package.end_location
+        arrival_time_at_location = route._arrival_times.get(dropoff_location)
+        
+        if arrival_time_at_location:
+            processing_time = timedelta(minutes=15)  # Example processing time
+            return arrival_time_at_location + processing_time
+        
+        return None  # If no specific drop-off time can be calculated
+
     def view_routes(self):
         output = []
 
         for route in self._routes:
+            route.calculate_eta_for_all_locations()
             output.append(f"\nId: {route.id}")
             output.append(f"Locations: {[loc.name for loc in route.locations]}")
-            if route.status == RouteStatus.COMPLETED.value:
+            if route.status == RouteStatus.COMPLETED:
                 output.append("Truck: Route completed, truck is going back to the warehouse.")
             else:
                 output.append(f"Truck: {route.truck.model if route.truck else 'None'}")
@@ -156,16 +171,15 @@ class ApplicationData:
                 f"Departure time: {route.departure_time.strftime('%H:%M:%S') if route.departure_time else 'Not set'}")
             output.append(f'Status: {route.status.value}')
             
-            output.append(f'Route Info: {self.search_route(route.locations[0].name, route.locations[-1].name)}')
+            output.append(f'Route Info: {route.route_info()}')
 
             if route.packages:
                 for pkg in route.packages:
-                    if isinstance(pkg.expected_arrival_time, str):
-                        pkg.expected_arrival_time = datetime.fromisoformat(pkg.expected_arrival_time)
+                    # Directly get the ETA from the end_location it is sent to
+                    pkg_eta = route._arrival_times.get(pkg.end_location)
 
-                    eta = pkg.expected_arrival_time.strftime(
-                        '%b %dth %H:%M') if pkg.expected_arrival_time is not None else 'Not available'
-                    output.append(f"Package ID: {pkg.id}, ETA: {eta}")
+                    eta_str = pkg_eta.strftime('%b %dth %H:%M') if pkg_eta else 'Not available'
+                    output.append(f"Package ID: {pkg.id}, ETA: {eta_str}")
             else:
                 output.append("No packages assigned to this route.")
 

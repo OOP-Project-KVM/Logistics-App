@@ -1,4 +1,4 @@
-from models.roles import Roles
+
 from commands.validation_helpers import (validate_last_name, validate_first_name, validate_username,
                                           validate_password, role_validator, validate_contact)
 

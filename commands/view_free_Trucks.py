@@ -1,6 +1,6 @@
 
 from commands.base_command import BaseCommand
-from models.truck_status import Status
+from models.status.truck_status import Status
 
 class ViewFreeTrucksCommand(BaseCommand):
     def __init__(self, params: list[str], app_data):

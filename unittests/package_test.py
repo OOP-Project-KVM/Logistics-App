@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
 from models.package import Package
-from models.package_status import PackageStatus
+from models.status.package_status import PackageStatus
 
 
 

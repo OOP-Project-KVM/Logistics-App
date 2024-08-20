@@ -4,7 +4,7 @@ from commands.assign_package import AssignPackageToRouteCommand
 from core.application_data import ApplicationData
 from models.package import Package
 from models.route import Route
-from models.route_status import RouteStatus
+from models.status.route_status import RouteStatus
 from datetime import datetime
 
 class TestAssignPackageToRouteCommand(unittest.TestCase):

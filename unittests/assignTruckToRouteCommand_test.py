@@ -4,7 +4,7 @@ from commands.assign_truck_toRoute import AssignTruckToRouteCommand
 from core.application_data import ApplicationData
 from models.truck import Truck
 from models.route import Route
-from models.truck_status import Status
+from models.status.truck_status import Status
 
 class TestAssignTruckToRouteCommand(unittest.TestCase):
 

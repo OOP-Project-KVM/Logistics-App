@@ -1,12 +1,12 @@
 
 from typing import List, Optional
 from models.location import Location
-from models.package_status import PackageStatus
+from models.status.package_status import PackageStatus
 from models.truck import Truck
 from models.package import Package, DISTANCE_TABLE
-from models.truck_status import Status
+from models.status.truck_status import Status
 from datetime import datetime, timedelta
-from models.route_status import RouteStatus
+from models.status.route_status import RouteStatus
 
 
 class Route:
@@ -180,7 +180,10 @@ class Route:
             loc_name = self._locations[i].name
             loc_eta = self._arrival_times.get(loc_name)
             
+            last_loc = self._locations[-1].name
+            last_location_eta = self._arrival_times.get(last_loc)
 
+            
             if current_time >= loc_eta: #type: ignore
                 # Unload packages at the current location
                 for package in self._packages:
@@ -197,7 +200,7 @@ class Route:
                     print(f"Delivered packages at {loc_name}: {[package.id for package in delivered_packages]}")
 
             # If the route has reached the final destination
-            if i == len(self._locations) - 1:
+            if i == len(self._locations) - 1 and current_time >= last_location_eta: #type: ignore
                 self.status = RouteStatus.COMPLETED
                 if self._truck:
                     self._truck.is_free = Status.AVAILABLE  # Mark the truck as available
@@ -216,4 +219,9 @@ class Route:
 
     def route_info(self):
         self.calculate_eta_for_all_locations()
-        return f'{[(k,v) for k,v in self._arrival_times.items()]}'
+        
+        formatted_info = []
+        for location, eta in self._arrival_times.items():
+            formatted_info.append(f"{location} ({eta.strftime('%b %dth %H:%M')})")
+        
+        return " → ".join(formatted_info)

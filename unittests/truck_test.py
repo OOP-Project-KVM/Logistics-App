@@ -1,6 +1,6 @@
 import unittest
 from models.truck import Truck
-from models.truck_status import Status
+from models.status.truck_status import Status
 
 
 class TestTruck(unittest.TestCase):

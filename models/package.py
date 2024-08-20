@@ -1,7 +1,6 @@
-from models.package_status import PackageStatus
+from models.status.package_status import PackageStatus
 from commands.validation_helpers import (validate_location, validate_weight,
                                          validate_customer_contact, validate_locations)
-
 LOCATIONS = ["SYD", "MEL", "ADL", "ASP", "BRI", "DAR", "PER"]
 DISTANCE_TABLE = {
     "SYD": {"MEL": 1.5, "ADL": 1376, "ASP": 2762, "BRI": 909, "DAR": 3935, "PER": 4016},  # 877
@@ -35,7 +34,6 @@ class Package:
         self.distance = get_distance(start_location, end_location)
         self.pack_status = PackageStatus.TOBEASSIGNED
         self.expected_arrival_time = None
-        self.current_location = None
 
         Package.all_ids.add(id_pack)
         Package.customer_info[id_pack] = customer_contact
@@ -97,3 +95,6 @@ class Package:
                 f"Status: {self.pack_status.value}\n"
                 f"Customer Contact: {self.customer_contact}")
 
+    
+
+   

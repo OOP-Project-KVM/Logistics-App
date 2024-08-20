@@ -8,7 +8,7 @@
 
 from commands.base_command import BaseCommand
 from core.application_data import ApplicationData
-from models.truck_status import Status
+from models.status.truck_status import Status
 
 class AssignTruckToRouteCommand(BaseCommand):
     def __init__(self, params: list[str], app_data: ApplicationData):

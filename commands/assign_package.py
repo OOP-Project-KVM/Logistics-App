@@ -9,7 +9,7 @@
 from re import S
 from commands.base_command import BaseCommand
 from core.application_data import ApplicationData
-from models.route_status import RouteStatus
+from models.status.route_status import RouteStatus
 
 
 class AssignPackageToRouteCommand(BaseCommand):

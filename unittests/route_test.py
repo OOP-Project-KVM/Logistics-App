@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 from models.route import Route
 from models.package import Package
 from models.truck import Truck
-from models.package_status import PackageStatus
-from models.truck_status import Status
-from models.route_status import RouteStatus
+from models.status.package_status import PackageStatus
+from models.status.truck_status import Status
+from models.status.route_status import RouteStatus
 from models.location import Location
 
 

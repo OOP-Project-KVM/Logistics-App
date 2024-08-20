@@ -1,6 +1,6 @@
 
 from commands.base_command import BaseCommand
-from models.package_status import PackageStatus
+from models.status.package_status import PackageStatus
 
 
 class ViewUnassignedPackagesCommand(BaseCommand):

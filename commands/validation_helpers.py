@@ -1,5 +1,5 @@
 LOCATIONS = ["SYD", "MEL", "ADL", "ASP", "BRI", "DAR", "PER"]
-from models.roles import Roles
+from models.status.roles import Roles
     
 def role_validator(role):
     if role not in [Roles.MANAGER.value, Roles.WORKER.value]:

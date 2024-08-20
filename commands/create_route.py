@@ -10,7 +10,7 @@
 from commands.base_command import BaseCommand
 from models.location import Location
 from datetime import datetime
-from models.roles import Roles
+from models.status.roles import Roles
 
 class CreateRouteCommand(BaseCommand):
     def __init__(self, params: list[str], app_data):
