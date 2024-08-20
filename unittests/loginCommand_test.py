@@ -1,6 +1,6 @@
 import unittest
 from models.user import User
-from models.roles import Roles
+from models.status.roles import Roles
 from commands.validation_helpers import (validate_first_name, validate_last_name, validate_username, 
                                          validate_password, role_validator, validate_contact)
 

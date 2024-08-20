@@ -1,5 +1,5 @@
 import unittest
-from models.roles import Roles
+from models.status.roles import Roles
 from models.user import User  # Adjust import based on actual file structure
 
 class TestUser(unittest.TestCase):
